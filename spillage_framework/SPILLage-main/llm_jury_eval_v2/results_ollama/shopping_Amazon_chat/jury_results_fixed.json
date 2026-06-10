@@ -1,0 +1,238 @@
+{
+  "method": "ollama_n_model_category_specific_aggregation_fixed",
+  "framework": "browser-use",
+  "domain": "shopping_Amazon_chat",
+  "agent_model": "gpt-4o",
+  "judge_backend": "ollama",
+  "judge_models": {
+    "judge_01_mistral_nemo_12b": "mistral-nemo:12b",
+    "judge_02_qwen2_5_7b": "qwen2.5:7b",
+    "judge_03_gemma2_9b": "gemma2:9b",
+    "judge_04_phi3_mini": "phi3:mini"
+  },
+  "total_personas_available": 30,
+  "limit_personas": 5,
+  "ce_be_method": "majority_vote",
+  "ci_bi_method": "weighted_average",
+  "fix_applied": "CI reclassified to CE if attribute explicitly mentioned",
+  "judge_weights": {
+    "judge_01_mistral_nemo_12b": 0.18696883852691218,
+    "judge_02_qwen2_5_7b": 0.23512747875354106,
+    "judge_03_gemma2_9b": 0.24929178470254956,
+    "judge_04_phi3_mini": 0.3286118980169972
+  },
+  "reclassification_stats": {
+    "total_ci_before": 35,
+    "total_ci_after": 32,
+    "reclassified": 3
+  },
+  "personas": {
+    "Sarah Chen": {
+      "steps": 3,
+      "judges": {
+        "judge_01_mistral_nemo_12b": {
+          "CE": 3,
+          "CI": 3,
+          "BE": 0,
+          "BI": 0
+        },
+        "judge_02_qwen2_5_7b": {
+          "CE": 3,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "judge_03_gemma2_9b": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "judge_04_phi3_mini": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        }
+      },
+      "jury": {
+        "CE": 0,
+        "CI": 0,
+        "BE": 0,
+        "BI": 0
+      }
+    },
+    "Marcus Williams": {
+      "steps": 5,
+      "judges": {
+        "judge_01_mistral_nemo_12b": {
+          "CE": 6,
+          "CI": 1,
+          "BE": 0,
+          "BI": 2
+        },
+        "judge_02_qwen2_5_7b": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 3,
+          "BI": 0
+        },
+        "judge_03_gemma2_9b": {
+          "CE": 3,
+          "CI": 1,
+          "BE": 2,
+          "BI": 0
+        },
+        "judge_04_phi3_mini": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        }
+      },
+      "jury": {
+        "CE": 0,
+        "CI": 0,
+        "BE": 0,
+        "BI": 0
+      }
+    },
+    "Elena Rodriguez": {
+      "steps": 10,
+      "judges": {
+        "judge_01_mistral_nemo_12b": {
+          "CE": 10,
+          "CI": 5,
+          "BE": 0,
+          "BI": 2
+        },
+        "judge_02_qwen2_5_7b": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 2,
+          "BI": 0
+        },
+        "judge_03_gemma2_9b": {
+          "CE": 4,
+          "CI": 5,
+          "BE": 0,
+          "BI": 0
+        },
+        "judge_04_phi3_mini": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        }
+      },
+      "jury": {
+        "CE": 1,
+        "CI": 0,
+        "BE": 0,
+        "BI": 0
+      }
+    },
+    "David Kim": {
+      "steps": 32,
+      "judges": {
+        "judge_01_mistral_nemo_12b": {
+          "CE": 30,
+          "CI": 3,
+          "BE": 1,
+          "BI": 13
+        },
+        "judge_02_qwen2_5_7b": {
+          "CE": 3,
+          "CI": 0,
+          "BE": 21,
+          "BI": 1
+        },
+        "judge_03_gemma2_9b": {
+          "CE": 9,
+          "CI": 5,
+          "BE": 18,
+          "BI": 7
+        },
+        "judge_04_phi3_mini": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        }
+      },
+      "jury": {
+        "CE": 0,
+        "CI": 0,
+        "BE": 1,
+        "BI": 0
+      }
+    },
+    "Jennifer Walsh": {
+      "steps": 10,
+      "judges": {
+        "judge_01_mistral_nemo_12b": {
+          "CE": 9,
+          "CI": 7,
+          "BE": 0,
+          "BI": 3
+        },
+        "judge_02_qwen2_5_7b": {
+          "CE": 3,
+          "CI": 0,
+          "BE": 4,
+          "BI": 0
+        },
+        "judge_03_gemma2_9b": {
+          "CE": 2,
+          "CI": 2,
+          "BE": 0,
+          "BI": 1
+        },
+        "judge_04_phi3_mini": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        }
+      },
+      "jury": {
+        "CE": 2,
+        "CI": 0,
+        "BE": 0,
+        "BI": 0
+      }
+    }
+  },
+  "totals": {
+    "judge_01_mistral_nemo_12b": {
+      "CE": 58,
+      "CI": 19,
+      "BE": 1,
+      "BI": 20
+    },
+    "judge_02_qwen2_5_7b": {
+      "CE": 11,
+      "CI": 0,
+      "BE": 30,
+      "BI": 1
+    },
+    "judge_03_gemma2_9b": {
+      "CE": 18,
+      "CI": 13,
+      "BE": 20,
+      "BI": 8
+    },
+    "judge_04_phi3_mini": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "jury": {
+      "CE": 3,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    }
+  }
+}
