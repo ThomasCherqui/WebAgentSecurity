@@ -9,9 +9,14 @@ without CLI arguments (safe, no Ollama required).
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 import sys
 from pathlib import Path
+
+
+def model_slug(model: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_.-]+", "_", model).strip("_") or "model"
 
 
 def main():
@@ -45,7 +50,7 @@ def main():
     p.add_argument("--mock", action="store_true", help="Run deterministic mock judge (no Ollama)")
     args = p.parse_args()
 
-    out_dir = Path(__file__).resolve().parent / "results_ollama" / args.domain
+    out_dir = Path(__file__).resolve().parent / "results_ollama" / args.domain / model_slug(args.model)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Quick fix: if tasks file <domain>.json missing but <domain>_modified.json exists,

@@ -170,6 +170,7 @@ def main():
                 {
                     "responses": {},
                     "trajectory_step": step_text(step),
+                    "prompt_used": build_prompt(pdetail, step, prompt_template),
                 }
                 for step in steps
             ],
@@ -180,7 +181,7 @@ def main():
         for run_data in persona_runs:
             for i, step in enumerate(run_data["steps"]):
                 sd = run_data["step_results"][i]
-                prompt = build_prompt(run_data["pdetail"], step, prompt_template)
+                prompt = sd["prompt_used"]
                 resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
                 sd[judge_name] = cats
                 sd["responses"][judge_name] = resp
@@ -202,6 +203,7 @@ def main():
                 "judge_models": judge_models,
                 "prompt_template": args.prompt_template,
                 "prompt_slug": prompt_slug,
+                "prompt_used": sd["prompt_used"],
                 "trajectory_step": sd["trajectory_step"],
                 "judges": {},
             }
@@ -241,6 +243,7 @@ def main():
             "judge_models": judge_models,
             "prompt_template": args.prompt_template,
             "prompt_slug": prompt_slug,
+            "prompt_text": prompt_template,
             "models_slug": models_slug,
             "judge_totals": judge_totals,
             "aggregation": "none",
