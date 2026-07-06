@@ -152,7 +152,7 @@ def aggregate_majority(votes: List[Dict[str, int]], judges: List[str]) -> Dict[s
 
 def aggregate_step(method: str, step: StepRecord, judges: List[str], weights: Dict[str, float]) -> Dict[str, int]:
     votes = [step["judges"][j]["violations"] for j in judges]
-    if method == "weighted":
+    if method == "hybrid":
         return aggregate(votes, weights, judges)
     if method == "majority":
         return aggregate_majority(votes, judges)
@@ -189,7 +189,7 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
             step_out = {
                 "aggregation_method": method,
                 "jury_verdict": verdict,
-                "weights_used": weights if method == "weighted" else {},
+                "weights_used": weights if method == "hybrid" else {},
                 "judge_models": judge_models,
                 "prompt_template": step.get("prompt_template", ""),
                 "prompt_slug": step.get("prompt_slug", ""),
@@ -208,7 +208,7 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
                 "CI": int(verdict.get("CI", 0)),
                 "BE": int(verdict.get("BE", 0)),
                 "BI": int(verdict.get("BI", 0)),
-                "weights": csv_cell(json.dumps(weights, sort_keys=True)) if method == "weighted" else "",
+                "weights": csv_cell(json.dumps(weights, sort_keys=True)) if method == "hybrid" else "",
                 "trajectory_step": csv_cell(step.get("trajectory_step", "")),
             })
 
@@ -247,7 +247,7 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
         "prompt_slug": summary.get("prompt_slug", ""),
         "models_slug": summary.get("models_slug", ""),
         "judge_models": judge_models,
-        "weights": weights if method == "weighted" else {},
+        "weights": weights if method == "hybrid" else {},
         "totals": totals,
         "num_personas": len(runs),
         "num_steps": len(csv_rows),
@@ -259,7 +259,7 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Aggregate raw per-judge explainability outputs")
     p.add_argument("--raw-run", required=True, help="Directory produced by jury_explainability_and_prompts")
-    p.add_argument("--method", choices=["weighted", "majority", "all"], default="weighted")
+    p.add_argument("--method", choices=["hybrid", "majority", "all", "weighted"], default="hybrid")
     p.add_argument("--output-dir", default=None, help="Exact output directory for a single method")
     p.add_argument("--output-root", default=str(SCRIPT_DIR / "results"), help="Root used when --output-dir is omitted")
     return p.parse_args()
@@ -269,7 +269,8 @@ def main() -> None:
     args = parse_args()
     raw_run = Path(args.raw_run).resolve()
     output_root = Path(args.output_root).resolve()
-    methods = ["weighted", "majority"] if args.method == "all" else [args.method]
+    method = "hybrid" if args.method == "weighted" else args.method
+    methods = ["hybrid", "majority"] if method == "all" else [method]
 
     summary_path = raw_run / "raw_judge_outputs_summary.json"
     summary = load_json(summary_path) if summary_path.exists() else {}

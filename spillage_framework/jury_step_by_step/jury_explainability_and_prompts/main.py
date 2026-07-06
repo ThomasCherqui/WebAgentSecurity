@@ -43,18 +43,22 @@ def main():
     p.add_argument("--domain", default=default_domain)
     p.add_argument("--trajectories-dir", default=default_trajectories)
     p.add_argument("--tasks-dir", default=default_tasks)
-    p.add_argument("--model", default="gemma4:31b", help="Single model string (optional)")
-    p.add_argument("--models", nargs="+", default=None, help="One or more Ollama judge models; overrides --model")
+    p.add_argument("--model", default="gemma4:31b", help="Single Ollama judge model")
+    p.add_argument("--models", nargs="+", default=None, help="Deprecated alias; pass exactly one model")
     p.add_argument("--limit-personas", type=int, default=0, help="0 means no limit")
     p.add_argument("--limit-steps", type=int, default=0, help="0 means no limit")
+    p.add_argument("--resume-existing", action="store_true", help="Reuse existing predictions and process only missing personas")
     p.add_argument("--mock", action="store_true", help="Run deterministic mock judge (no Ollama)")
-    p.add_argument("--prompt-template", default="balanced_fewshot.md", help="Prompt .md filename under prompts/ or an absolute path")
+    p.add_argument("--prompt-template", default="violations_only_fewshot.md", help="Prompt .md filename under prompts/ or an absolute path")
     args = p.parse_args()
 
     model_names = args.models or [args.model]
+    if len(model_names) != 1:
+        raise SystemExit("This launcher runs exactly one model at a time. Use --model once, or run the batch script to loop over models.")
+    model = model_names[0]
     prompt_slug = slug(os.path.splitext(os.path.basename(args.prompt_template))[0])
-    models_slug = slug("__".join(model_names))
-    out_dir = Path(__file__).resolve().parent / "results_ollama" / args.domain / prompt_slug / models_slug
+    model_slug = slug(model)
+    out_dir = Path(__file__).resolve().parent / "results_ollama" / args.domain / prompt_slug / model_slug
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Quick fix: if tasks file <domain>.json missing but <domain>_modified.json exists,
@@ -74,14 +78,13 @@ def main():
                 print(f"Could not create symlink {expected} -> {candidate}: {e}")
 
     cmd = [sys.executable, str(script), "--domain", args.domain, "--trajectories-dir", args.trajectories_dir, "--tasks-dir", args.tasks_dir]
-    if args.models:
-        cmd += ["--models"] + args.models
-    elif args.model:
-        cmd += ["--model", args.model]
+    cmd += ["--model", model]
     if args.limit_personas and args.limit_personas > 0:
         cmd += ["--limit-personas", str(args.limit_personas)]
     if args.limit_steps and args.limit_steps > 0:
         cmd += ["--limit-steps", str(args.limit_steps)]
+    if args.resume_existing:
+        cmd += ["--resume-existing"]
     cmd += ["--allow-judge-errors", "--prompt-template", args.prompt_template]
 
     print("\n>>", " ".join(cmd))
@@ -89,8 +92,8 @@ def main():
     rc = subprocess.run(cmd)
     if rc.returncode != 0:
         print("Judge exited with code", rc.returncode)
-    else:
-        print("Raw judge output generation finished. Results are in:", out_dir)
+        raise SystemExit(rc.returncode)
+    print("Raw judge output generation finished. Results are in:", out_dir)
 
 
 if __name__ == "__main__":

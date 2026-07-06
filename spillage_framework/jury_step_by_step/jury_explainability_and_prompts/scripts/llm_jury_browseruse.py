@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Generate per-judge explainability outputs for Browser-Use trajectories.
+"""Generate single-model explainability outputs for Browser-Use trajectories.
 
 This script focuses on prompt/model sweeps. It:
  - reads parsed trajectories from a domain folder (persona_*_parsed.json)
  - reads the tasks persona JSON to get persona metadata
  - for each step, builds an explainability prompt and calls safe_judge_ollama()
- - writes raw per-judge outputs only; aggregation is handled downstream
+ - writes one model's raw explainability outputs; aggregation is handled downstream
 
 Usage (example):
   python llm_jury_browseruse.py --domain shopping_Amazon_chat \
@@ -27,12 +27,7 @@ from typing import List, Dict, Any
 # import common utilities from this package
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
-from ollama_jury_common import (
-    empty_counts,
-    make_judges,
-    parse_models,
-    safe_judge_ollama,
-)
+from ollama_jury_common import empty_counts, parse_json, parse_models, safe_judge_ollama
 
 PROMPTS_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "prompts"))
 
@@ -111,19 +106,50 @@ def build_prompt(pdetail: Dict[str, Any], step: Any, template: str) -> str:
     return render_template(template, values)
 
 
+def normalize_violation(value: Any) -> Dict[str, str]:
+    if not isinstance(value, dict):
+        return {"category": "", "attribute": "", "evidence": "", "explanation": ""}
+    return {
+        "category": str(value.get("category") or ""),
+        "attribute": str(value.get("attribute") or ""),
+        "evidence": str(value.get("evidence") or ""),
+        "explanation": str(value.get("explanation") or ""),
+    }
+
+
+def parsed_response_fields(response: str) -> Dict[str, Any]:
+    parsed = parse_json(response)
+    violations_raw = parsed.get("violations", [])
+    violations = [normalize_violation(v) for v in violations_raw] if isinstance(violations_raw, list) else []
+    evidence = "; ".join(v["evidence"] for v in violations if v.get("evidence"))
+    explanation = "; ".join(v["explanation"] for v in violations if v.get("explanation"))
+    return {
+        "violations": violations,
+        "evidence": evidence,
+        "explanation": explanation,
+        "no_violation_reason": str(parsed.get("no_violation_reason") or ""),
+    }
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--domain", required=True)
     p.add_argument("--trajectories-dir", required=True, help="Folder containing persona_*_parsed.json")
     p.add_argument("--tasks-dir", required=True, help="Folder containing <domain>.json persona tasks")
-    p.add_argument("--model", default="llama3.1:8b", help="Single model string for baseline/backward compatibility")
-    p.add_argument("--models", nargs="+", default=None, help="One or more Ollama judge models; overrides --model")
+    p.add_argument("--model", default="llama3.1:8b", help="Single Ollama judge model")
+    p.add_argument("--models", nargs="+", default=None, help=argparse.SUPPRESS)
     p.add_argument("--ollama-host", default=None)
     p.add_argument("--limit-personas", type=int, default=None)
     p.add_argument("--limit-steps", type=int, default=None)
     p.add_argument("--allow-judge-errors", action="store_true")
-    p.add_argument("--prompt-template", default="balanced_fewshot.md", help="Prompt .md filename under prompts/ or an absolute path")
+    p.add_argument("--resume-existing", action="store_true", help="Reuse existing per-persona JSON/predictions.csv and process only missing personas")
+    p.add_argument("--prompt-template", default="violations_only_fewshot.md", help="Prompt .md filename under prompts/ or an absolute path")
     args = p.parse_args()
+
+    model_names = parse_models(args.models or [args.model])
+    if len(model_names) != 1:
+        raise SystemExit("This explainability stage runs exactly one model at a time. Use --model once, or launch separate runs.")
+    model = model_names[0]
 
     traj_domain_dir = os.path.join(args.trajectories_dir, args.domain)
     tasks_file = os.path.join(args.tasks_dir, f"{args.domain}.json")
@@ -143,137 +169,148 @@ def main():
         personas = personas[: args.limit_personas]
 
     prompt_template = load_prompt_template(args.prompt_template)
-    model_names = parse_models(args.models or [args.model])
-    judge_specs = make_judges(model_names)
-    judges = [jid for jid, _ in judge_specs]
     prompt_slug = slug(os.path.splitext(os.path.basename(args.prompt_template))[0])
-    models_slug = slug("__".join(model_names))
-    out_dir = os.path.join(SCRIPT_DIR, "..", "results_ollama", args.domain, prompt_slug, models_slug)
+    model_slug = slug(model)
+    out_dir = os.path.join(SCRIPT_DIR, "..", "results_ollama", args.domain, prompt_slug, model_slug)
     out_dir = os.path.normpath(out_dir)
     os.makedirs(out_dir, exist_ok=True)
     print(f"Using prompt template: {args.prompt_template}")
-    print("Judge models: " + ", ".join(model_names))
+    print(f"Judge model: {model}")
 
-    persona_runs = []
+    fieldnames = [
+        "domain",
+        "persona",
+        "persona_id",
+        "step",
+        "model",
+        "prompt_template",
+        "prompt_slug",
+        "CE",
+        "CI",
+        "BE",
+        "BI",
+        "violations",
+        "evidence",
+        "explanation",
+        "no_violation_reason",
+        "response",
+        "trajectory_step",
+    ]
+    csv_path = os.path.join(out_dir, "predictions.csv")
+    csv_rows = []
+    totals = empty_counts()
+    completed_personas = set()
+
+    if args.resume_existing and os.path.isfile(csv_path):
+        try:
+            with open(csv_path, newline="", encoding="utf-8") as cf:
+                for row in csv.DictReader(cf):
+                    csv_rows.append(row)
+                    if row.get("persona"):
+                        completed_personas.add(row["persona"])
+                    for cat in totals:
+                        try:
+                            totals[cat] += int(row.get(cat, 0) or 0)
+                        except Exception:
+                            pass
+            print(f"Resume enabled: loaded {len(csv_rows)} existing rows for {len(completed_personas)} personas")
+        except Exception as e:
+            print(f"Resume warning: could not load existing CSV {csv_path}: {e}")
+            csv_rows = []
+            totals = empty_counts()
+            completed_personas = set()
+
+    def write_csv() -> None:
+        with open(csv_path, "w", newline="", encoding="utf-8") as cf:
+            writer = csv.DictWriter(cf, fieldnames=fieldnames, lineterminator="\n")
+            writer.writeheader()
+            for row in csv_rows:
+                writer.writerow(row)
+
+    def write_summary() -> None:
+        with open(os.path.join(out_dir, "summary.json"), "w") as jf:
+            json.dump({
+                "method": "ollama_single_judge_explainability",
+                "domain": args.domain,
+                "model": model,
+                "model_slug": model_slug,
+                "prompt_template": args.prompt_template,
+                "prompt_slug": prompt_slug,
+                "totals": totals,
+                "aggregation": "none",
+                "num_personas_completed": len({row["persona"] for row in csv_rows}),
+                "num_steps": len(csv_rows),
+            }, jf, indent=2)
+
+    print(f"Running {model}")
+    write_csv()
+    write_summary()
+
     for pid, pname, path in personas:
+        if args.resume_existing and pname in completed_personas and os.path.isfile(os.path.join(out_dir, f"{pname}.json")):
+            print(f"Skip existing persona: {pname}")
+            continue
+        print(f"Persona: {pname}")
         with open(path) as f:
             data = json.load(f)
         steps = load_steps(data)
         if args.limit_steps:
             steps = steps[: args.limit_steps]
         pdetail = personas_lookup.get(str(pid)) or personas_lookup.get(pname) or {}
-        persona_runs.append({
-            "pname": pname,
-            "pdetail": pdetail,
-            "steps": steps,
-            "step_results": [
-                {
-                    "responses": {},
-                    "trajectory_step": step_text(step),
-                }
-                for step in steps
-            ],
-        })
-
-    for judge_name, model in judge_specs:
-        print(f"Running {judge_name} ({model})")
-        for run_data in persona_runs:
-            for i, step in enumerate(run_data["steps"]):
-                sd = run_data["step_results"][i]
-                prompt = build_prompt(run_data["pdetail"], step, prompt_template)
-                resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
-                sd[judge_name] = cats
-                sd["responses"][judge_name] = resp
-
-    raw_csv_rows = []
-    judge_models = {j: m for j, m in judge_specs}
-    judge_totals = {j: empty_counts() for j in judges}
-
-    for run_data in persona_runs:
-        pname = run_data["pname"]
-        pdetail = run_data["pdetail"]
         per_person_out = {}
-        for i, sd in enumerate(run_data["step_results"]):
+
+        for i, step in enumerate(steps):
+            prompt = build_prompt(pdetail, step, prompt_template)
+            trajectory_step = step_text(step)
+            resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+            parsed_fields = parsed_response_fields(resp)
             step_out = {
                 "domain": args.domain,
                 "persona": pname,
                 "persona_id": pdetail.get("id", ""),
                 "step": i + 1,
-                "judge_models": judge_models,
+                "judge_model": model,
                 "prompt_template": args.prompt_template,
                 "prompt_slug": prompt_slug,
-                "trajectory_step": sd["trajectory_step"],
-                "judges": {},
+                "cats": cats,
+                "violations": parsed_fields["violations"],
+                "evidence": parsed_fields["evidence"],
+                "explanation": parsed_fields["explanation"],
+                "no_violation_reason": parsed_fields["no_violation_reason"],
+                "response": resp,
+                "trajectory_step": trajectory_step,
             }
-            for j in judges:
-                step_out["judges"][j] = {
-                    "model": judge_models[j],
-                    "violations": sd[j],
-                    "response": sd["responses"][j],
-                }
-                for c in judge_totals[j]:
-                    judge_totals[j][c] += sd[j][c]
-                raw_csv_rows.append({
-                    "domain": args.domain,
-                    "persona": pname,
-                    "persona_id": pdetail.get("id", ""),
-                    "step": i + 1,
-                    "judge_id": j,
-                    "judge_model": judge_models[j],
-                    "prompt_template": args.prompt_template,
-                    "prompt_slug": prompt_slug,
-                    "CE": int(sd[j].get("CE", 0)),
-                    "CI": int(sd[j].get("CI", 0)),
-                    "BE": int(sd[j].get("BE", 0)),
-                    "BI": int(sd[j].get("BI", 0)),
-                    "response": csv_cell(sd["responses"][j]),
-                    "trajectory_step": csv_cell(sd["trajectory_step"]),
-                })
             per_person_out[f"Step {i+1}"] = step_out
+            for c in totals:
+                totals[c] += cats[c]
+            csv_rows.append({
+                "domain": args.domain,
+                "persona": pname,
+                "persona_id": pdetail.get("id", ""),
+                "step": i + 1,
+                "model": model,
+                "prompt_template": args.prompt_template,
+                "prompt_slug": prompt_slug,
+                "CE": int(cats.get("CE", 0)),
+                "CI": int(cats.get("CI", 0)),
+                "BE": int(cats.get("BE", 0)),
+                "BI": int(cats.get("BI", 0)),
+                "violations": csv_cell(json.dumps(parsed_fields["violations"], ensure_ascii=False)),
+                "evidence": csv_cell(parsed_fields["evidence"]),
+                "explanation": csv_cell(parsed_fields["explanation"]),
+                "no_violation_reason": csv_cell(parsed_fields["no_violation_reason"]),
+                "response": csv_cell(resp),
+                "trajectory_step": csv_cell(trajectory_step),
+            })
 
         with open(os.path.join(out_dir, f"{pname}.json"), "w") as pf:
             json.dump(per_person_out, pf, indent=2)
+        completed_personas.add(pname)
+        write_csv()
+        write_summary()
+        print(f"Saved persona output: {os.path.join(out_dir, f'{pname}.json')}")
 
-    with open(os.path.join(out_dir, "raw_judge_outputs_summary.json"), "w") as jf:
-        json.dump({
-            "method": "ollama_multi_judge_explainability_raw",
-            "domain": args.domain,
-            "judge_models": judge_models,
-            "prompt_template": args.prompt_template,
-            "prompt_slug": prompt_slug,
-            "models_slug": models_slug,
-            "judge_totals": judge_totals,
-            "aggregation": "none",
-        }, jf, indent=2)
-
-    csv_path = os.path.join(out_dir, "raw_predictions_by_judge.csv")
-    if raw_csv_rows:
-        with open(csv_path, "w", newline="", encoding="utf-8") as cf:
-            writer = csv.DictWriter(
-                cf,
-                fieldnames=[
-                    "domain",
-                    "persona",
-                    "persona_id",
-                    "step",
-                    "judge_id",
-                    "judge_model",
-                    "prompt_template",
-                    "prompt_slug",
-                    "CE",
-                    "CI",
-                    "BE",
-                    "BI",
-                    "response",
-                    "trajectory_step",
-                ],
-                lineterminator="\n",
-            )
-            writer.writeheader()
-            for r in raw_csv_rows:
-                writer.writerow(r)
-
-    print(f"Raw judge outputs written to {out_dir}")
+    print(f"Explainability outputs written to {out_dir}")
     print("Aggregation disabled for this stage; use the aggregation pipeline downstream.")
 
 
