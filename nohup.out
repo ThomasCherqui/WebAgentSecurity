@@ -1,0 +1,414 @@
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_Amazon_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template strict_evidence_fewshot.md
+Using prompt template: strict_evidence_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_Amazon_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template strict_evidence_fewshot.md
+Using prompt template: strict_evidence_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_Amazon_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template strict_evidence_fewshot.md
+Using prompt template: strict_evidence_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_Amazon_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template strict_evidence_fewshot.md
+Using prompt template: strict_evidence_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_Amazon_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template strict_evidence_fewshot.md
+Using prompt template: strict_evidence_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+>> /usr/bin/python3 /home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py --domain shopping_ebay_chat --trajectories-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/trajectories/browseruse_gpt4o_parsed --tasks-dir /home/zhonghao/Documents/Thomas/home/spillage_framework/data/input/tasks/less_sensitive --model gemma4:31b --allow-judge-errors --prompt-template comparative_counterexamples_fewshot.md
+Using prompt template: comparative_counterexamples_fewshot.md
+Judge model: gemma4:31b
+Running gemma4:31b
+Persona: Sarah Chen
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 318, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/llm_jury_browseruse.py", line 265, in main
+    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 119, in safe_judge_ollama
+    text = ollama_chat(prompt, model, host=host, temperature=temperature, max_tokens=max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/scripts/ollama_jury_common.py", line 106, in ollama_chat
+    with urllib.request.urlopen(req, timeout=600) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 100, in <module>
+    main()
+  File "/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_explainability_and_prompts/main.py", line 92, in main
+    rc = subprocess.run(cmd)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
