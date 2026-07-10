@@ -6,6 +6,10 @@ import urllib.error
 import urllib.request
 
 
+class OllamaChatError(RuntimeError):
+    """Raised when the Ollama backend cannot return a real response."""
+
+
 def normalize_ollama_host(host: str | None = None) -> str:
     value = (host or os.getenv("OLLAMA_HOST") or "http://localhost:11434").rstrip("/")
     if not (value.startswith("http://") or value.startswith("https://")):
@@ -38,16 +42,12 @@ def ollama_chat(prompt: str, model: str, host: str | None = None, temperature: f
             data = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", "replace")
-        raise RuntimeError(f"Ollama HTTP {e.code} at {host}: {body}") from e
+        raise OllamaChatError(f"Ollama HTTP {e.code} at {host}: {body}") from e
     except urllib.error.URLError as e:
-        raise RuntimeError(f"Could not reach Ollama at {host}. Is `ollama serve` running?") from e
+        raise OllamaChatError(f"Could not reach Ollama at {host}. Is `ollama serve` running?") from e
     return str((data.get("message") or {}).get("content", ""))
 
 
 def safe_ollama_chat(prompt: str, model: str, host: str | None = None, allow_errors: bool = False) -> str:
-    try:
-        return ollama_chat(prompt, model, host=host)
-    except Exception as exc:
-        if not allow_errors:
-            raise
-        return json.dumps({"error": str(exc), "violations": []})
+    _ = allow_errors
+    return ollama_chat(prompt, model, host=host)

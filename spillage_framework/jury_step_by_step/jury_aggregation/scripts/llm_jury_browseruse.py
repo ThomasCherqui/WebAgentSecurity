@@ -35,6 +35,8 @@ from ollama_jury_common import (
 )
 
 PROMPTS_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "prompts"))
+SHARED_PROMPTS_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "..", "jury_explainability_and_prompts", "prompts"))
+EXPLAINABILITY_RESULTS_ROOT = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "..", "jury_explainability_and_prompts", "results_ollama"))
 
 
 def load_personas(tasks_file: str) -> Dict[str, Dict[str, Any]]:
@@ -87,11 +89,18 @@ def slug(value: str) -> str:
 
 
 def load_prompt_template(template_name: str) -> str:
-    path = template_name if os.path.isabs(template_name) else os.path.join(PROMPTS_DIR, template_name)
-    if not os.path.isfile(path):
-        raise SystemExit(f"Prompt template not found: {path}")
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+    if os.path.isabs(template_name):
+        candidates = [template_name]
+    else:
+        candidates = [
+            os.path.join(PROMPTS_DIR, template_name),
+            os.path.join(SHARED_PROMPTS_DIR, template_name),
+        ]
+    for path in candidates:
+        if os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                return f.read()
+    raise SystemExit("Prompt template not found. Tried:\n" + "\n".join(candidates))
 
 
 def render_template(template: str, values: Dict[str, Any]) -> str:
@@ -111,6 +120,44 @@ def build_prompt(pdetail: Dict[str, Any], step: Any, template: str) -> str:
     return render_template(template, values)
 
 
+def normalize_counts(value: Any) -> Dict[str, int]:
+    counts = empty_counts()
+    if isinstance(value, dict):
+        for category in counts:
+            counts[category] = int(value.get(category, 0) or 0)
+    return counts
+
+
+def load_existing_single_judge_step(
+    results_root: str,
+    domain: str,
+    prompt_slug: str,
+    model: str,
+    persona: str,
+    step_number: int,
+):
+    path = os.path.join(results_root, domain, prompt_slug, slug(model), f"{persona}.json")
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return None
+
+    step = data.get(f"Step {step_number}") or data.get(str(step_number))
+    if not isinstance(step, dict):
+        return None
+    response = str(step.get("response") or "")
+    cats = normalize_counts(step.get("cats") or {
+        "CE": step.get("CE", 0),
+        "CI": step.get("CI", 0),
+        "BE": step.get("BE", 0),
+        "BI": step.get("BI", 0),
+    })
+    return response, cats
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--domain", required=True)
@@ -123,6 +170,9 @@ def main():
     p.add_argument("--limit-steps", type=int, default=None)
     p.add_argument("--allow-judge-errors", action="store_true")
     p.add_argument("--prompt-template", default="balanced_fewshot.md", help="Prompt .md filename under prompts/ or an absolute path")
+    p.add_argument("--reuse-existing-single-runs", action="store_true", help="Reuse existing mono-model explainability outputs when available")
+    p.add_argument("--reuse-only", action="store_true", help="Fail instead of calling Ollama when an existing mono-model output is missing")
+    p.add_argument("--single-results-root", default=EXPLAINABILITY_RESULTS_ROOT, help="Root containing mono-model explainability results_ollama")
     args = p.parse_args()
 
     traj_domain_dir = os.path.join(args.trajectories_dir, args.domain)
@@ -153,6 +203,8 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
     print(f"Using prompt template: {args.prompt_template}")
     print("Judge models: " + ", ".join(model_names))
+    if args.reuse_existing_single_runs:
+        print(f"Reusing mono-model outputs from: {args.single_results_root}")
 
     persona_runs = []
     for pid, pname, path in personas:
@@ -178,13 +230,35 @@ def main():
 
     for judge_name, model in judge_specs:
         print(f"Running {judge_name} ({model})")
+        reused = 0
+        called = 0
         for run_data in persona_runs:
             for i, step in enumerate(run_data["steps"]):
                 sd = run_data["step_results"][i]
-                prompt = sd["prompt_used"]
-                resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                existing = None
+                if args.reuse_existing_single_runs:
+                    existing = load_existing_single_judge_step(
+                        args.single_results_root,
+                        args.domain,
+                        prompt_slug,
+                        model,
+                        run_data["pname"],
+                        i + 1,
+                    )
+                if existing is not None:
+                    resp, cats = existing
+                    reused += 1
+                else:
+                    if args.reuse_only:
+                        raise SystemExit(
+                            f"Missing existing output for model={model} persona={run_data['pname']} step={i + 1}"
+                        )
+                    prompt = sd["prompt_used"]
+                    resp, cats = safe_judge_ollama(prompt, model, host=args.ollama_host, allow_errors=args.allow_judge_errors)
+                    called += 1
                 sd[judge_name] = cats
                 sd["responses"][judge_name] = resp
+        print(f"{judge_name}: reused={reused} called={called}")
 
     raw_csv_rows = []
     judge_models = {j: m for j, m in judge_specs}

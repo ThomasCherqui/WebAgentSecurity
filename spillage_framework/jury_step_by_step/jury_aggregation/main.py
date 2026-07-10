@@ -17,7 +17,7 @@ from typing import Any, Dict, Iterable, List, Tuple
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR / "scripts"))
-from ollama_jury_common import CATEGORIES, aggregate, compute_weights, empty_counts, majority_threshold
+from aggregation_methods import CATEGORIES, aggregate_step_votes, compute_weights, empty_counts
 
 
 StepRecord = Dict[str, Any]
@@ -140,23 +140,9 @@ def all_step_votes(runs: Iterable[RunRecord], judges: List[str]) -> List[Dict[st
     return steps
 
 
-def aggregate_majority(votes: List[Dict[str, int]], judges: List[str]) -> Dict[str, int]:
-    out = empty_counts()
-    threshold = majority_threshold(judges)
-    for cat in CATEGORIES:
-        nonzero = [vote.get(cat, 0) for vote in votes if vote.get(cat, 0) > 0]
-        if len(nonzero) >= threshold:
-            out[cat] = min(nonzero)
-    return out
-
-
 def aggregate_step(method: str, step: StepRecord, judges: List[str], weights: Dict[str, float]) -> Dict[str, int]:
     votes = [step["judges"][j]["violations"] for j in judges]
-    if method == "hybrid":
-        return aggregate(votes, weights, judges)
-    if method == "majority":
-        return aggregate_majority(votes, judges)
-    raise ValueError(f"Unknown aggregation method: {method}")
+    return aggregate_step_votes(method, votes, judges, weights)
 
 
 def part_or_default(path: Path, offset: int, default: str) -> str:
@@ -168,13 +154,16 @@ def default_output_dir(raw_run: Path, output_root: Path, method: str, summary: D
     domain = summary.get("domain") or part_or_default(raw_run, -3, "domain")
     prompt_slug = summary.get("prompt_slug") or part_or_default(raw_run, -2, "prompt")
     models_slug = summary.get("models_slug") or raw_run.name
-    return output_root / slug(domain) / slug(prompt_slug) / slug(models_slug) / method
+    return output_root / slug(method) / slug(domain) / slug(prompt_slug) / slug(models_slug)
 
 
 def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
     summary, runs, judges, judge_models = load_raw_run(raw_run)
     steps_for_weights = all_step_votes(runs, judges)
     weights = compute_weights(steps_for_weights, judges) if steps_for_weights else {j: 1.0 / len(judges) for j in judges}
+    domain = summary.get("domain") or part_or_default(raw_run, -3, "")
+    prompt_slug = summary.get("prompt_slug") or part_or_default(raw_run, -2, "")
+    models_slug = summary.get("models_slug") or raw_run.name
 
     totals = empty_counts()
     csv_rows: List[Dict[str, Any]] = []
@@ -198,6 +187,9 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
             }
             per_person_out[f"Step {step['step']}"] = step_out
             csv_rows.append({
+                "domain": domain,
+                "prompt_slug": prompt_slug,
+                "models_slug": models_slug,
                 "persona": run["persona"],
                 "persona_id": run.get("persona_id", ""),
                 "step": step["step"],
@@ -220,6 +212,9 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
         writer = csv.DictWriter(
             cf,
             fieldnames=[
+                "domain",
+                "prompt_slug",
+                "models_slug",
                 "persona",
                 "persona_id",
                 "step",
@@ -261,7 +256,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--raw-run", required=True, help="Directory produced by jury_explainability_and_prompts")
     p.add_argument("--method", choices=["hybrid", "majority", "all", "weighted"], default="hybrid")
     p.add_argument("--output-dir", default=None, help="Exact output directory for a single method")
-    p.add_argument("--output-root", default=str(SCRIPT_DIR / "results"), help="Root used when --output-dir is omitted")
+    p.add_argument("--output-root", default=str(SCRIPT_DIR / "results_ollama"), help="Root used when --output-dir is omitted")
     return p.parse_args()
 
 

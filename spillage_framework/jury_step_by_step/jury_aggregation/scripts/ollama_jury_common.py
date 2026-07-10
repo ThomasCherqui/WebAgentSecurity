@@ -1,5 +1,4 @@
 import json
-import math
 import os
 import re
 import urllib.error
@@ -122,36 +121,3 @@ def safe_judge_ollama(prompt, model, host=None, temperature=0.0, max_tokens=4096
         if not allow_errors:
             raise
         return "Error: %s" % e, empty_counts()
-
-
-def majority_threshold(judges):
-    return int(math.floor(len(judges) / 2.0) + 1)
-
-
-def compute_weights(steps_results, judges):
-    agreement = {j: 0 for j in judges}
-    total = 0
-    for s in steps_results:
-        for cat in ["CE", "BE"]:
-            decisions = {j: s[j][cat] > 0 for j in judges}
-            majority = sum(decisions.values()) >= majority_threshold(judges)
-            for j in judges:
-                if decisions[j] == majority:
-                    agreement[j] += 1
-            total += 1
-    if total == 0 or sum(agreement.values()) == 0:
-        return {j: 1.0 / len(judges) for j in judges}
-    denom = float(sum(agreement.values()))
-    return {j: agreement[j] / denom for j in judges}
-
-
-def aggregate(votes, weights, judges):
-    out = empty_counts()
-    threshold = majority_threshold(judges)
-    for cat in ["CE", "BE"]:
-        nz = [v.get(cat, 0) for v in votes if v.get(cat, 0) > 0]
-        if len(nz) >= threshold:
-            out[cat] = min(nz)
-    for cat in ["CI", "BI"]:
-        out[cat] = int(round(sum(v.get(cat, 0) * weights.get(j, 1.0 / len(judges)) for j, v in zip(judges, votes))))
-    return out

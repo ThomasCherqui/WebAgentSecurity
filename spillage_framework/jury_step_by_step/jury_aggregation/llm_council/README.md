@@ -11,7 +11,7 @@ jury_explainability_and_prompts/results_ollama/<domain>/<prompt_slug>/<model_slu
 Output layout:
 
 ```text
-llm_council/results/<domain>/<prompt_slug>/<council_slug>/
+jury_aggregation/results_ollama/llm_council/<domain>/<prompt_slug>/<council_slug>/
   <Persona>.json
   predictions.csv
   summary.json
@@ -20,7 +20,7 @@ llm_council/results/<domain>/<prompt_slug>/<council_slug>/
 Quick plumbing test without calling Ollama:
 
 ```bash
-python3 spillage_framework/jury_step_by_step/llm_council/main.py \
+python3 spillage_framework/jury_step_by_step/jury_aggregation/llm_council/main.py \
   --domain shopping_Amazon_chat \
   --prompt-slug violations_only_fewshot \
   --candidate-models 'gemma4:31b' \
@@ -34,7 +34,7 @@ python3 spillage_framework/jury_step_by_step/llm_council/main.py \
 Real run:
 
 ```bash
-python3 spillage_framework/jury_step_by_step/llm_council/main.py \
+python3 spillage_framework/jury_step_by_step/jury_aggregation/llm_council/main.py \
   --domain shopping_Amazon_chat \
   --prompt-slug violations_only_fewshot \
   --candidate-models 'gemma4:31b' 'llama3.3:70b' \

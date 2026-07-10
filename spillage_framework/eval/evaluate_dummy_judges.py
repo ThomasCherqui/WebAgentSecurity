@@ -503,6 +503,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gold-root", type=Path, default=default_gold)
     parser.add_argument("--pred-root", type=Path, default=default_pred)
     parser.add_argument("--output-dir", type=Path, default=default_out)
+    parser.add_argument("--task", action="append", default=None, help="Task/domain to evaluate; repeat for multiple tasks")
     return parser.parse_args()
 
 
@@ -510,6 +511,11 @@ def main() -> None:
     args = parse_args()
     gold_rows = build_golden_rows(args.gold_root)
     pred_rows = read_prediction_rows(args.pred_root)
+
+    if args.task:
+        wanted_tasks = {normalize_task(task) for task in args.task}
+        gold_rows = [row for row in gold_rows if str(row["task"]) in wanted_tasks]
+        pred_rows = [row for row in pred_rows if str(row["task"]) in wanted_tasks]
 
     by_task_gold: Dict[str, List[Mapping[str, Any]]] = defaultdict(list)
     by_task_model_pred: Dict[Tuple[str, str], List[Mapping[str, Any]]] = defaultdict(list)

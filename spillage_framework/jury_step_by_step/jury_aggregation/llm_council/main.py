@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List
@@ -24,11 +25,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tasks-dir", type=Path, default=TASKS_DIR)
     parser.add_argument("--output-root", type=Path, default=RESULTS_ROOT)
     parser.add_argument("--output-dir", type=Path, default=None)
-    parser.add_argument("--run-name", default=None, help="Readable output folder name under results/<domain>/<prompt_slug>/")
+    parser.add_argument("--run-name", default=None, help="Readable output folder name under results_ollama/llm_council/<domain>/<prompt_slug>/")
     parser.add_argument("--limit-personas", type=int, default=0)
     parser.add_argument("--limit-steps", type=int, default=0)
     parser.add_argument("--ollama-host", default=None)
-    parser.add_argument("--allow-errors", action="store_true")
+    parser.add_argument("--allow-errors", action="store_true", help="Deprecated compatibility flag; Ollama backend errors always stop the run.")
     parser.add_argument("--mock", action="store_true", help="Do not call Ollama; useful to validate plumbing.")
     return parser.parse_args()
 
@@ -163,14 +164,23 @@ def main() -> None:
             current_persona = persona
             print(f"[{idx}/{len(records)}] persona={persona}")
 
-        result = run_step(
-            record,
-            reviewer_models=args.reviewer_models,
-            chairman_model=args.chairman_model,
-            host=args.ollama_host,
-            allow_errors=args.allow_errors,
-            mock=args.mock,
-        )
+        try:
+            result = run_step(
+                record,
+                reviewer_models=args.reviewer_models,
+                chairman_model=args.chairman_model,
+                host=args.ollama_host,
+                allow_errors=args.allow_errors,
+                mock=args.mock,
+            )
+        except Exception as exc:
+            step = record.get("step", "unknown")
+            print(
+                f"STOP: llm-council failed at {idx}/{len(records)} "
+                f"persona={persona} step={step}: {exc}",
+                file=sys.stderr,
+            )
+            raise SystemExit(1) from exc
         persona_outputs[persona][f"Step {record.get('step')}"] = result
         rows.append(row_from_result(result))
 
