@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Leakage Monitor</title>
+
+    <style>
+      body {
+        width: 300px;
+        padding: 16px;
+        font-family: Arial, sans-serif;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 10px;
+      }
+
+      #status {
+        margin-top: 12px;
+        white-space: pre-wrap;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Agent Leakage Monitor</h3>
+
+    <button id="start">
+      Start monitoring
+    </button>
+
+    <button id="export">
+      Export formatted JSON
+    </button>
+
+    <button id="stop">
+      Stop monitoring
+    </button>
+
+    <div id="status">Loading…</div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
