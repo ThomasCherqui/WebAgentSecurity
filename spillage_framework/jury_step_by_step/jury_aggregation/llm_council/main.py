@@ -6,12 +6,15 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set, Tuple
 
 from config import DEFAULT_PROMPT_SLUG, EXPLAINABILITY_RESULTS_ROOT, RESULTS_ROOT, TASKS_DIR
 from council import run_step
 from loaders import load_council_inputs
 from schemas import CATEGORIES, csv_cell, empty_counts, slug
+
+
+StepKey = Tuple[str, int]
 
 
 def parse_args() -> argparse.Namespace:
@@ -29,6 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit-personas", type=int, default=0)
     parser.add_argument("--limit-steps", type=int, default=0)
     parser.add_argument("--ollama-host", default=None)
+    parser.add_argument("--resume-existing", action="store_true", help="Resume from existing predictions.csv and per-person JSON files in the output directory")
     parser.add_argument("--allow-errors", action="store_true", help="Deprecated compatibility flag; Ollama backend errors always stop the run.")
     parser.add_argument("--mock", action="store_true", help="Do not call Ollama; useful to validate plumbing.")
     return parser.parse_args()
@@ -53,6 +57,11 @@ def write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def read_json(path: Path) -> Any:
+    with path.open(encoding="utf-8") as f:
+        return json.load(f)
 
 
 def row_from_result(result: Dict[str, Any]) -> Dict[str, Any]:
@@ -114,6 +123,28 @@ def write_predictions(path: Path, rows: List[Dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def normalize_step(value: Any) -> int:
+    return int(value or 0)
+
+
+def row_key(row: Dict[str, Any]) -> StepKey:
+    return (str(row.get("persona", "")), normalize_step(row.get("step", 0)))
+
+
+def load_existing_rows(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def load_existing_persona_output(path: Path) -> Dict[str, Any]:
+    if not path.exists():
+        return {}
+    data = read_json(path)
+    return data if isinstance(data, dict) else {}
+
+
 def summary_payload(args: argparse.Namespace, rows: List[Dict[str, Any]], output_dir: Path) -> Dict[str, Any]:
     totals = empty_counts()
     for row in rows:
@@ -154,15 +185,27 @@ def main() -> None:
         limit_steps=args.limit_steps,
     )
 
-    rows: List[Dict[str, Any]] = []
+    predictions_path = output_dir / "predictions.csv"
+    rows: List[Dict[str, Any]] = load_existing_rows(predictions_path) if args.resume_existing else []
+    completed_keys: Set[StepKey] = {row_key(row) for row in rows}
     persona_outputs: Dict[str, Dict[str, Any]] = defaultdict(dict)
     current_persona = None
+    skipped = 0
+    processed = 0
+
+    if args.resume_existing and rows:
+        print(f"Resume mode: found {len(rows)} existing council verdicts in {predictions_path}")
 
     for idx, record in enumerate(records, start=1):
         persona = record.get("persona", "unknown")
         if persona != current_persona:
             current_persona = persona
             print(f"[{idx}/{len(records)}] persona={persona}")
+
+        key = (persona, int(record.get("step", 0) or 0))
+        if key in completed_keys:
+            skipped += 1
+            continue
 
         try:
             result = run_step(
@@ -181,13 +224,21 @@ def main() -> None:
                 file=sys.stderr,
             )
             raise SystemExit(1) from exc
-        persona_outputs[persona][f"Step {record.get('step')}"] = result
-        rows.append(row_from_result(result))
+
+        if not persona_outputs[persona]:
+            persona_outputs[persona] = load_existing_persona_output(output_dir / f"{persona}.json")
+        persona_outputs[persona][f"Step {record.get("step")}"] = result
+        row = row_from_result(result)
+        rows.append(row)
+        completed_keys.add(row_key(row))
+        processed += 1
 
         write_json(output_dir / f"{persona}.json", persona_outputs[persona])
-        write_predictions(output_dir / "predictions.csv", rows)
+        write_predictions(predictions_path, rows)
         write_json(output_dir / "summary.json", summary_payload(args, rows, output_dir))
 
+    if args.resume_existing:
+        print(f"Resume summary: skipped={skipped} processed={processed}")
     print(f"Done. Wrote {len(rows)} council verdicts to {output_dir}")
 
 
