@@ -84,6 +84,32 @@ def safe_model_name(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "_", name).strip("_") or "model"
 
 
+def normalize_model_family(name: str) -> str:
+    """Collapse local/cloud and closely related model variants into families."""
+    parts = str(name).split("/")
+    variant = parts[-1].lower()
+    families = [
+        family
+        for marker, family in (
+            ("gemma", "gemma"),
+            ("gpt-oss", "gpt-oss"),
+            ("nemotron", "nemotron"),
+            ("mistral", "mistral"),
+            ("qwen", "qwen"),
+        )
+        if marker in variant
+    ]
+    if "council" in variant:
+        normalized = f"{families[0] if families else 'llm'}_council"
+    elif len(families) > 1:
+        normalized = "ensemble_" + "_".join(families)
+    elif families:
+        normalized = families[0]
+    else:
+        normalized = safe_model_name(variant).lower()
+    return "/".join([*parts[:-1], normalized])
+
+
 def read_json(path: Path) -> Mapping[str, Any]:
     with path.open(encoding="utf-8") as f:
         return json.load(f)
@@ -135,6 +161,24 @@ def build_golden_rows(gold_root: Path) -> List[Dict[str, Any]]:
     return rows
 
 
+def read_golden_csv(path: Path) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        for raw in csv.DictReader(f):
+            row: Dict[str, Any] = {
+                "task": normalize_task(raw.get("task", "")),
+                "gold_task_dir": raw.get("gold_task_dir", ""),
+                "persona": normalize_persona(raw.get("persona", "")),
+                "step": normalize_step(raw.get("step", "")),
+                "gold_file": raw.get("gold_file", ""),
+            }
+            for label in LABELS:
+                row[label] = to_binary(raw.get(label, 0))
+            rows.append(row)
+    ensure_unique(rows, f"gold CSV {path}")
+    return rows
+
+
 def read_prediction_rows(pred_root: Path) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     for pred_path in sorted(pred_root.rglob("predictions.csv")):
@@ -142,7 +186,8 @@ def read_prediction_rows(pred_root: Path) -> List[Dict[str, Any]]:
         if len(rel_parts) < 2:
             continue
         path_task = normalize_task(rel_parts[0])
-        path_model = "/".join(rel_parts[1:-1]) or pred_path.parent.name
+        raw_path_model = "/".join(rel_parts[1:-1]) or pred_path.parent.name
+        path_model = normalize_model_family(raw_path_model)
         with pred_path.open(newline="", encoding="utf-8") as f:
             for raw in csv.DictReader(f):
                 task = normalize_task(raw.get("domain") or path_task)
@@ -501,6 +546,7 @@ def parse_args() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gold-root", type=Path, default=default_gold)
+    parser.add_argument("--gold-csv", type=Path, default=None, help="Use this golden CSV instead of --gold-root")
     parser.add_argument("--pred-root", type=Path, default=default_pred)
     parser.add_argument("--output-dir", type=Path, default=default_out)
     parser.add_argument("--task", action="append", default=None, help="Task/domain to evaluate; repeat for multiple tasks")
@@ -509,7 +555,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    gold_rows = build_golden_rows(args.gold_root)
+    gold_source = args.gold_csv or args.gold_root
+    gold_rows = read_golden_csv(args.gold_csv) if args.gold_csv else build_golden_rows(args.gold_root)
     pred_rows = read_prediction_rows(args.pred_root)
 
     if args.task:
@@ -523,11 +570,6 @@ def main() -> None:
         by_task_gold[str(row["task"])].append(row)
     for row in pred_rows:
         by_task_model_pred[(str(row["task"]), str(row["model"]))].append(row)
-
-    golden_dir = args.output_dir / "golden"
-    write_csv(golden_dir / "golden_all.csv", gold_rows, ["task", "gold_task_dir", "persona", "step", "gold_file", *LABELS])
-    for task, rows in sorted(by_task_gold.items()):
-        write_csv(golden_dir / f"golden_{safe_model_name(task)}.csv", rows, ["task", "gold_task_dir", "persona", "step", "gold_file", *LABELS])
 
     all_matched: List[Dict[str, Any]] = []
     all_label_metrics: List[Dict[str, Any]] = []
@@ -600,7 +642,7 @@ def main() -> None:
     write_csv(args.output_dir / "metrics_by_model.csv", model_metrics, model_fields)
     write_csv(args.output_dir / "matched_rows_all.csv", all_matched)
 
-    report = build_report(all_macro_metrics, all_label_metrics, model_metrics, args.output_dir, args.gold_root, args.pred_root)
+    report = build_report(all_macro_metrics, all_label_metrics, model_metrics, args.output_dir, gold_source, args.pred_root)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     (args.output_dir / "report.md").write_text(report, encoding="utf-8")
     (args.output_dir / "report.json").write_text(

@@ -10,127 +10,127 @@ Rows are matched exactly on `(task, persona, step)` after these normalizations:
 - persona names are trimmed and internal whitespace is collapsed;
 - step labels such as `Step 12` and `12` are both parsed to integer `12`.
 
-Golden root: `/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/0_jury_baseline_Spillage/existing_results`
-Prediction root: `/home/zhonghao/Documents/Thomas/home/spillage_framework/jury_step_by_step/jury_baseline_dummy_one_judge/results_ollama`
-Output directory: `/home/zhonghao/Documents/Thomas/home/spillage_framework/eval/dummy_judge_eval`
+Golden root: `spillage_framework/eval/gold_corrected.csv`
+Prediction root: `spillage_framework/data/output/jury_by_step_eval/dummy_judge`
+Output directory: `spillage_framework/eval/dummy_judge_eval`
 
 ## Model Ranking
 
 Primary ranking is weighted macro F1 across matched rows. Accuracy is shown, but not used as the main decision metric because most labels are negative.
 
-| rank | model                     | tasks | matched | coverage | f1     | recall | prec   | acc    | exact  |
-| ---- | ------------------------- | ----- | ------- | -------- | ------ | ------ | ------ | ------ | ------ |
-| 1    | nemotron-cascade-2_latest | 2     | 1014    | 100.0%   |  40.6% |  56.4% |  32.6% |  82.9% |  54.4% |
-| 2    | gemma4_31b                | 2     | 1014    | 100.0%   |  38.5% |  50.5% |  33.7% |  83.9% |  55.4% |
-| 3    | gpt-oss_20b-cloud         | 2     | 1014    | 100.0%   |  37.4% |  46.8% |  31.3% |  84.5% |  57.1% |
-| 4    | qwen3.6_35b               | 2     | 1014    | 100.0%   |  36.4% |  44.0% |  31.5% |  86.1% |  56.3% |
-| 5    | mistral-small_latest      | 2     | 1014    | 100.0%   |  28.3% |  39.0% |  24.0% |  74.4% |  25.5% |
+| rank | model    | tasks | matched | coverage | f1     | recall | prec   | acc    | exact  |
+| ---- | -------- | ----- | ------- | -------- | ------ | ------ | ------ | ------ | ------ |
+| 1    | gemma    | 2     | 1014    | 100.0%   |  46.5% |  53.4% |  42.2% |  91.2% |  72.9% |
+| 2    | gpt-oss  | 2     | 1014    | 100.0%   |  46.4% |  51.2% |  48.0% |  89.1% |  68.0% |
+| 3    | nemotron | 2     | 1014    | 100.0%   |  44.8% |  55.3% |  42.1% |  88.4% |  67.6% |
+| 4    | qwen     | 2     | 1014    | 100.0%   |  42.1% |  42.5% |  42.9% |  91.0% |  69.4% |
+| 5    | mistral  | 2     | 1014    | 100.0%   |  34.7% |  38.9% |  33.7% |  79.9% |  37.8% |
 
 Decision hint: prefer the top macro-F1 model if you want the best overall CE/BE/CI/BI balance; prefer higher recall if missing leaks is more costly than false positives; prefer higher precision if manual review budget is tight.
 
 ## Macro Summary
 
-| task                 | model                     | matched | gold | pred | gold_only | pred_only | acc    | prec   | recall | f1     | exact  |
-| -------------------- | ------------------------- | ------- | ---- | ---- | --------- | --------- | ------ | ------ | ------ | ------ | ------ |
-| shopping_Amazon_chat | gemma4_31b                | 467     | 467  | 467  | 0         | 0         |  82.1% |  36.7% |  50.6% |  38.5% |  51.8% |
-| shopping_Amazon_chat | gpt-oss_20b-cloud         | 467     | 467  | 467  | 0         | 0         |  82.5% |  29.4% |  43.0% |  34.8% |  52.0% |
-| shopping_Amazon_chat | mistral-small_latest      | 467     | 467  | 467  | 0         | 0         |  76.3% |  26.1% |  42.7% |  31.6% |  31.7% |
-| shopping_Amazon_chat | nemotron-cascade-2_latest | 467     | 467  | 467  | 0         | 0         |  81.0% |  32.0% |  54.2% |  39.7% |  51.8% |
-| shopping_Amazon_chat | qwen3.6_35b               | 467     | 467  | 467  | 0         | 0         |  84.4% |  30.7% |  43.5% |  35.6% |  52.9% |
-| shopping_ebay_chat   | gemma4_31b                | 547     | 547  | 547  | 0         | 0         |  85.6% |  31.2% |  50.4% |  38.5% |  58.5% |
-| shopping_ebay_chat   | gpt-oss_20b-cloud         | 547     | 547  | 547  | 0         | 0         |  86.2% |  32.8% |  50.1% |  39.6% |  61.4% |
-| shopping_ebay_chat   | mistral-small_latest      | 547     | 547  | 547  | 0         | 0         |  72.8% |  22.2% |  35.8% |  25.4% |  20.3% |
-| shopping_ebay_chat   | nemotron-cascade-2_latest | 547     | 547  | 547  | 0         | 0         |  84.5% |  33.1% |  58.2% |  41.4% |  56.7% |
-| shopping_ebay_chat   | qwen3.6_35b               | 547     | 547  | 547  | 0         | 0         |  87.6% |  32.2% |  44.3% |  37.1% |  59.2% |
+| task                 | model    | matched | gold | pred | gold_only | pred_only | acc    | prec   | recall | f1     | exact  |
+| -------------------- | -------- | ------- | ---- | ---- | --------- | --------- | ------ | ------ | ------ | ------ | ------ |
+| shopping_Amazon_chat | gemma    | 467     | 467  | 467  | 0         | 0         |  90.4% |  40.1% |  48.6% |  43.9% |  71.1% |
+| shopping_Amazon_chat | gpt-oss  | 467     | 467  | 467  | 0         | 0         |  88.0% |  54.4% |  48.3% |  47.7% |  65.5% |
+| shopping_Amazon_chat | mistral  | 467     | 467  | 467  | 0         | 0         |  82.7% |  36.3% |  42.1% |  38.1% |  45.4% |
+| shopping_Amazon_chat | nemotron | 467     | 467  | 467  | 0         | 0         |  87.3% |  42.5% |  55.3% |  44.9% |  64.9% |
+| shopping_Amazon_chat | qwen     | 467     | 467  | 467  | 0         | 0         |  90.0% |  42.4% |  42.3% |  41.7% |  67.0% |
+| shopping_ebay_chat   | gemma    | 547     | 547  | 547  | 0         | 0         |  92.0% |  44.0% |  57.6% |  48.8% |  74.4% |
+| shopping_ebay_chat   | gpt-oss  | 547     | 547  | 547  | 0         | 0         |  90.0% |  42.7% |  53.6% |  45.2% |  70.2% |
+| shopping_ebay_chat   | mistral  | 547     | 547  | 547  | 0         | 0         |  77.4% |  31.5% |  36.2% |  31.8% |  31.3% |
+| shopping_ebay_chat   | nemotron | 547     | 547  | 547  | 0         | 0         |  89.3% |  41.8% |  55.2% |  44.7% |  69.8% |
+| shopping_ebay_chat   | qwen     | 547     | 547  | 547  | 0         | 0         |  91.9% |  43.3% |  42.7% |  42.5% |  71.5% |
 
 ## Per Label
 
-### shopping_Amazon_chat / gemma4_31b
+### shopping_Amazon_chat / gemma
+
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 467  | 256     | 336      | 256 | 80 | 0  |  82.9% |  76.2% | 100.0% |  86.5% |
+| BE    | 467  | 262     | 293      | 247 | 46 | 15 |  86.9% |  84.3% |  94.3% |  89.0% |
+| CI    | 467  | 7       | 20       | 0   | 20 | 7  |  94.2% |   0.0% |   0.0% |   0.0% |
+| BI    | 467  | 8       | 3        | 0   | 3  | 8  |  97.6% |   0.0% |   0.0% |   0.0% |
+
+### shopping_Amazon_chat / gpt-oss
+
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 467  | 256     | 311      | 241 | 70 | 15 |  81.8% |  77.5% |  94.1% |  85.0% |
+| BE    | 467  | 262     | 224      | 189 | 35 | 73 |  76.9% |  84.4% |  72.1% |  77.8% |
+| CI    | 467  | 7       | 18       | 1   | 17 | 6  |  95.1% |   5.6% |  14.3% |   8.0% |
+| BI    | 467  | 8       | 2        | 1   | 1  | 7  |  98.3% |  50.0% |  12.5% |  20.0% |
+
+### shopping_Amazon_chat / mistral
 
 | label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
 | ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 186     | 336      | 185 | 151 | 1  |  67.5% |  55.1% |  99.5% |  70.9% |
-| BE    | 467  | 177     | 293      | 171 | 122 | 6  |  72.6% |  58.4% |  96.6% |  72.8% |
-| CI    | 467  | 18      | 20       | 0   | 20  | 18 |  91.9% |   0.0% |   0.0% |   0.0% |
-| BI    | 467  | 16      | 3        | 1   | 2   | 15 |  96.4% |  33.3% |   6.2% |  10.5% |
+| CE    | 467  | 256     | 218      | 177 | 41  | 79 |  74.3% |  81.2% |  69.1% |  74.7% |
+| BE    | 467  | 262     | 407      | 260 | 147 | 2  |  68.1% |  63.9% |  99.2% |  77.7% |
+| CI    | 467  | 7       | 11       | 0   | 11  | 7  |  96.1% |   0.0% |   0.0% |   0.0% |
+| BI    | 467  | 8       | 28       | 0   | 28  | 8  |  92.3% |   0.0% |   0.0% |   0.0% |
 
-### shopping_Amazon_chat / gpt-oss_20b-cloud
+### shopping_Amazon_chat / nemotron
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 186     | 311      | 176 | 135 | 10 |  69.0% |  56.6% |  94.6% |  70.8% |
-| BE    | 467  | 177     | 224      | 137 | 87  | 40 |  72.8% |  61.2% |  77.4% |  68.3% |
-| CI    | 467  | 18      | 18       | 0   | 18  | 18 |  92.3% |   0.0% |   0.0% |   0.0% |
-| BI    | 467  | 16      | 2        | 0   | 2   | 16 |  96.1% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 467  | 256     | 286      | 234 | 52 | 22 |  84.2% |  81.8% |  91.4% |  86.3% |
+| BE    | 467  | 262     | 273      | 228 | 45 | 34 |  83.1% |  83.5% |  87.0% |  85.2% |
+| CI    | 467  | 7       | 66       | 3   | 63 | 4  |  85.7% |   4.5% |  42.9% |   8.2% |
+| BI    | 467  | 8       | 10       | 0   | 10 | 8  |  96.1% |   0.0% |   0.0% |   0.0% |
 
-### shopping_Amazon_chat / mistral-small_latest
+### shopping_Amazon_chat / qwen
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 186     | 218      | 134 | 84  | 52 |  70.9% |  61.5% |  72.0% |  66.3% |
-| BE    | 467  | 177     | 407      | 175 | 232 | 2  |  49.9% |  43.0% |  98.9% |  59.9% |
-| CI    | 467  | 18      | 11       | 0   | 11  | 18 |  93.8% |   0.0% |   0.0% |   0.0% |
-| BI    | 467  | 16      | 28       | 0   | 28  | 16 |  90.6% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 467  | 256     | 326      | 249 | 77 | 7  |  82.0% |  76.4% |  97.3% |  85.6% |
+| BE    | 467  | 262     | 202      | 188 | 14 | 74 |  81.2% |  93.1% |  71.8% |  81.0% |
+| CI    | 467  | 7       | 0        | 0   | 0  | 7  |  98.5% |   0.0% |   0.0% |   0.0% |
+| BI    | 467  | 8       | 0        | 0   | 0  | 8  |  98.3% |   0.0% |   0.0% |   0.0% |
 
-### shopping_Amazon_chat / nemotron-cascade-2_latest
+### shopping_ebay_chat / gemma
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 186     | 286      | 173 | 113 | 13 |  73.0% |  60.5% |  93.0% |  73.3% |
-| BE    | 467  | 177     | 273      | 160 | 113 | 17 |  72.2% |  58.6% |  90.4% |  71.1% |
-| CI    | 467  | 18      | 66       | 6   | 60  | 12 |  84.6% |   9.1% |  33.3% |  14.3% |
-| BI    | 467  | 16      | 10       | 0   | 10  | 16 |  94.4% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 547  | 291     | 366      | 289 | 77 | 2  |  85.6% |  79.0% |  99.3% |  88.0% |
+| BE    | 547  | 270     | 294      | 246 | 48 | 24 |  86.8% |  83.7% |  91.1% |  87.2% |
+| CI    | 547  | 5       | 15       | 2   | 13 | 3  |  97.1% |  13.3% |  40.0% |  20.0% |
+| BI    | 547  | 4       | 5        | 0   | 5  | 4  |  98.4% |   0.0% |   0.0% |   0.0% |
 
-### shopping_Amazon_chat / qwen3.6_35b
+### shopping_ebay_chat / gpt-oss
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 186     | 326      | 181 | 145 | 5  |  67.9% |  55.5% |  97.3% |  70.7% |
-| BE    | 467  | 177     | 202      | 136 | 66  | 41 |  77.1% |  67.3% |  76.8% |  71.8% |
-| CI    | 467  | 18      | 0        | 0   | 0   | 18 |  96.1% |   0.0% |   0.0% |   0.0% |
-| BI    | 467  | 16      | 0        | 0   | 0   | 16 |  96.6% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 547  | 291     | 344      | 276 | 68 | 15 |  84.8% |  80.2% |  94.8% |  86.9% |
+| BE    | 547  | 270     | 260      | 215 | 45 | 55 |  81.7% |  82.7% |  79.6% |  81.1% |
+| CI    | 547  | 5       | 26       | 2   | 24 | 3  |  95.1% |   7.7% |  40.0% |  12.9% |
+| BI    | 547  | 4       | 4        | 0   | 4  | 4  |  98.5% |   0.0% |   0.0% |   0.0% |
 
-### shopping_ebay_chat / gemma4_31b
-
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 547  | 225     | 366      | 225 | 141 | 0  |  74.2% |  61.5% | 100.0% |  76.1% |
-| BE    | 547  | 178     | 294      | 167 | 127 | 11 |  74.8% |  56.8% |  93.8% |  70.8% |
-| CI    | 547  | 13      | 15       | 1   | 14  | 12 |  95.2% |   6.7% |   7.7% |   7.1% |
-| BI    | 547  | 6       | 5        | 0   | 5   | 6  |  98.0% |   0.0% |   0.0% |   0.0% |
-
-### shopping_ebay_chat / gpt-oss_20b-cloud
-
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 547  | 225     | 344      | 219 | 125 | 6  |  76.1% |  63.7% |  97.3% |  77.0% |
-| BE    | 547  | 178     | 260      | 156 | 104 | 22 |  77.0% |  60.0% |  87.6% |  71.2% |
-| CI    | 547  | 13      | 26       | 2   | 24  | 11 |  93.6% |   7.7% |  15.4% |  10.3% |
-| BI    | 547  | 6       | 4        | 0   | 4   | 6  |  98.2% |   0.0% |   0.0% |   0.0% |
-
-### shopping_ebay_chat / mistral-small_latest
+### shopping_ebay_chat / mistral
 
 | label | rows | support | pred_pos | tp  | fp  | fn  | acc    | prec   | recall | f1     |
 | ----- | ---- | ------- | -------- | --- | --- | --- | ------ | ------ | ------ | ------ |
-| CE    | 547  | 225     | 194      | 101 | 93  | 124 |  60.3% |  52.1% |  44.9% |  48.2% |
-| BE    | 547  | 178     | 476      | 175 | 301 | 3   |  44.4% |  36.8% |  98.3% |  53.5% |
-| CI    | 547  | 13      | 21       | 0   | 21  | 13  |  93.8% |   0.0% |   0.0% |   0.0% |
-| BI    | 547  | 6       | 35       | 0   | 35  | 6   |  92.5% |   0.0% |   0.0% |   0.0% |
+| CE    | 547  | 291     | 194      | 137 | 57  | 154 |  61.4% |  70.6% |  47.1% |  56.5% |
+| BE    | 547  | 270     | 476      | 264 | 212 | 6   |  60.1% |  55.5% |  97.8% |  70.8% |
+| CI    | 547  | 5       | 21       | 0   | 21  | 5   |  95.2% |   0.0% |   0.0% |   0.0% |
+| BI    | 547  | 4       | 35       | 0   | 35  | 4   |  92.9% |   0.0% |   0.0% |   0.0% |
 
-### shopping_ebay_chat / nemotron-cascade-2_latest
+### shopping_ebay_chat / nemotron
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 547  | 225     | 335      | 214 | 121 | 11 |  75.9% |  63.9% |  95.1% |  76.4% |
-| BE    | 547  | 178     | 289      | 163 | 126 | 15 |  74.2% |  56.4% |  91.6% |  69.8% |
-| CI    | 547  | 13      | 49       | 6   | 43  | 7  |  90.9% |  12.2% |  46.2% |  19.4% |
-| BI    | 547  | 6       | 11       | 0   | 11  | 6  |  96.9% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 547  | 291     | 335      | 269 | 66 | 22 |  83.9% |  80.3% |  92.4% |  85.9% |
+| BE    | 547  | 270     | 289      | 239 | 50 | 31 |  85.2% |  82.7% |  88.5% |  85.5% |
+| CI    | 547  | 5       | 49       | 2   | 47 | 3  |  90.9% |   4.1% |  40.0% |   7.4% |
+| BI    | 547  | 4       | 11       | 0   | 11 | 4  |  97.3% |   0.0% |   0.0% |   0.0% |
 
-### shopping_ebay_chat / qwen3.6_35b
+### shopping_ebay_chat / qwen
 
-| label | rows | support | pred_pos | tp  | fp  | fn | acc    | prec   | recall | f1     |
-| ----- | ---- | ------- | -------- | --- | --- | -- | ------ | ------ | ------ | ------ |
-| CE    | 547  | 225     | 356      | 218 | 138 | 7  |  73.5% |  61.2% |  96.9% |  75.0% |
-| BE    | 547  | 178     | 212      | 143 | 69  | 35 |  81.0% |  67.5% |  80.3% |  73.3% |
-| CI    | 547  | 13      | 3        | 0   | 3   | 13 |  97.1% |   0.0% |   0.0% |   0.0% |
-| BI    | 547  | 6       | 0        | 0   | 0   | 6  |  98.9% |   0.0% |   0.0% |   0.0% |
+| label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
+| ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
+| CE    | 547  | 291     | 356      | 284 | 72 | 7  |  85.6% |  79.8% |  97.6% |  87.8% |
+| BE    | 547  | 270     | 212      | 198 | 14 | 72 |  84.3% |  93.4% |  73.3% |  82.2% |
+| CI    | 547  | 5       | 3        | 0   | 3  | 5  |  98.5% |   0.0% |   0.0% |   0.0% |
+| BI    | 547  | 4       | 0        | 0   | 0  | 4  |  99.3% |   0.0% |   0.0% |   0.0% |

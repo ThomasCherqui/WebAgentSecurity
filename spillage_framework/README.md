@@ -6,6 +6,14 @@ The dataset includes task files with personas that contain both relevant and irr
 
 ## Where to start
 
+The experimental phase is complete. For current result analysis, start in
+[`analysis/`](analysis/). It contains the consolidated metrics, the step-level
+human-review sheet, a map of canonical inputs, and a command that rebuilds the
+analysis outputs without rerunning agents or LLM judges.
+
+The sections below document the experimental pipelines retained for
+reproducibility.
+
 Pick the folder that matches what you're trying to do — each has its own README with end-to-end instructions, pinned `requirements.txt`, and a smoke-test command:
 
 | Goal | Folder | Entry point |

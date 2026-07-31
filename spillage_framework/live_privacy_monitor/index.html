@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Live Privacy Monitor</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background:#101418; color:#e8edf2 }
+    body { max-width:1100px; margin:40px auto; padding:0 20px }
+    h1 { margin-bottom:5px } .sub { color:#9ba9b6; margin-top:0 }
+    .panel { background:#182028; border:1px solid #2c3945; border-radius:12px; padding:18px; margin:16px 0 }
+    button { border:0; border-radius:8px; padding:10px 14px; margin:4px; cursor:pointer; font-weight:650 }
+    button.primary { background:#51d19a; color:#072015 } button.stop { background:#ff8b7b; color:#29100c }
+    input { width:min(680px,90%); padding:10px; border-radius:8px; border:1px solid #41505e; background:#0f151b; color:white }
+    pre { max-height:390px; overflow:auto; white-space:pre-wrap; background:#0d1217; padding:14px; border-radius:8px }
+    .status { display:inline-block; padding:5px 10px; border-radius:99px; background:#303b45 }
+    .yes { background:#7e2929 } .no { background:#176044 }
+  </style>
+</head>
+<body>
+  <h1>Live Privacy Monitor</h1>
+  <p class="sub">Capture CDP locale → juges Ollama → conseil LLM</p>
+  <section class="panel">
+    <span id="status" class="status">Chargement…</span>
+    <p><button id="launch">Ouvrir le profil Chrome</button><button id="start" class="primary">Lancer la capture</button><button id="stop" class="stop">Arrêter</button></p>
+    <small id="details"></small>
+  </section>
+  <section class="panel">
+    <label>But donné à Claude<br><input id="goal" placeholder="Ex. rechercher un produit sans divulguer mon adresse"></label>
+    <p><button id="analyze" class="primary">Analyser avec Ollama</button><button id="mock">Tester sans Ollama</button></p>
+    <div id="verdict"></div>
+  </section>
+  <section class="panel"><h2>Flux capturé</h2><pre id="events">[]</pre></section>
+  <script>
+    const $ = id => document.getElementById(id);
+    async function call(path, body={}) {
+      const res = await fetch(path, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)});
+      const data = await res.json(); if (!res.ok) throw new Error(data.detail || res.statusText); return data;
+    }
+    async function refresh() {
+      const [s,e] = await Promise.all([fetch('/api/status').then(r=>r.json()), fetch('/api/events').then(r=>r.json())]);
+      $('status').textContent = `${s.capturing ? '● Capture active' : '○ Capture arrêtée'} — ${s.events} événements`;
+      $('details').textContent = `CDP: ${s.cdp_endpoint} · navigateur: ${s.browser_binary || 'introuvable'} · profil: ${s.profile_dir}`;
+      $('events').textContent = JSON.stringify(e.events.slice(-100), null, 2);
+    }
+    $('launch').onclick = async()=>{try{await call('/api/browser/launch'); setTimeout(refresh,1500)}catch(e){alert(e.message)}};
+    $('start').onclick = async()=>{try{await call('/api/capture/start'); refresh()}catch(e){alert(e.message)}};
+    $('stop').onclick = async()=>{try{await call('/api/capture/stop'); refresh()}catch(e){alert(e.message)}};
+    async function run(mock) { $('verdict').textContent='Analyse en cours…'; try {
+      const r=await call('/api/analyze',{task_goal:$('goal').value,mock});
+      const over=!!r.oversharing; $('verdict').innerHTML=`<h2 class="status ${over?'yes':'no'}">${over?'Oversharing détecté':'Pas d’oversharing détecté'}</h2><pre>${JSON.stringify(r.final_verdict,null,2)}</pre>`;
+    } catch(e) {$('verdict').textContent='Erreur: '+e.message} }
+    $('analyze').onclick=()=>run(false); $('mock').onclick=()=>run(true);
+    refresh(); setInterval(refresh,2000);
+  </script>
+</body>
+</html>
+
