@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HAR Privacy Uploader</title>
+  <style>
+    :root { color-scheme:dark; font-family:Inter,system-ui,sans-serif; background:#0b1015; color:#e9eef3 }
+    body { max-width:1180px; margin:35px auto; padding:0 20px }
+    h1 { margin-bottom:4px } .muted { color:#98a6b3 }
+    .panel { background:#151d25; border:1px solid #2a3742; border-radius:12px; padding:18px; margin:16px 0 }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px }
+    label { display:block; color:#bac5cf; font-size:14px }
+    input[type=text],input[type=url],input[type=file],textarea { box-sizing:border-box; width:100%; margin-top:6px; padding:10px; border:1px solid #40505e; border-radius:8px; background:#0c1319; color:white }
+    textarea { min-height:75px; resize:vertical }
+    button { border:0; border-radius:8px; padding:10px 15px; font-weight:700; cursor:pointer; background:#65d9a5; color:#092318 }
+    button.secondary { background:#34424e; color:white } button:disabled { opacity:.45; cursor:not-allowed }
+    .stats { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 }
+    .pill { padding:6px 10px; background:#26333e; border-radius:99px; font-size:13px }
+    table { width:100%; border-collapse:collapse; font-size:13px } th,td { border-bottom:1px solid #2b3741; text-align:left; padding:9px; vertical-align:top }
+    td.url { max-width:420px; overflow-wrap:anywhere } td.payload { max-width:380px; white-space:pre-wrap; overflow-wrap:anywhere }
+    .scroll { max-height:470px; overflow:auto } pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#0b1116; padding:12px; border-radius:8px }
+    .danger { color:#ff9f94 } .success { color:#74dfad }
+    @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <h1>HAR Privacy Uploader</h1>
+  <p class="muted">Filtrage local → validation humaine → FastAPI via ngrok</p>
+
+  <section class="panel grid">
+    <label>Fichier HAR
+      <input id="har" type="file" accept=".har,application/json">
+    </label>
+    <label>URL ngrok du serveur
+      <input id="server" type="url" placeholder="https://xxxx.ngrok-free.app">
+    </label>
+    <label>But donné à Claude
+      <textarea id="goal" placeholder="Ex. acheter un produit sans communiquer mon adresse avant validation"></textarea>
+    </label>
+    <label>Secret partagé
+      <input id="token" type="password" placeholder="Même valeur que PRIVACY_MONITOR_TOKEN">
+    </label>
+    <div>
+      <label><input id="mock" type="checkbox"> Test serveur sans Ollama</label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="stats" id="stats"><span class="pill">Aucun HAR chargé</span></div>
+    <p>
+      <button id="all" class="secondary" disabled>Tout sélectionner</button>
+      <button id="none" class="secondary" disabled>Tout désélectionner</button>
+      <button id="send" disabled>Envoyer la sélection et analyser</button>
+    </p>
+    <div class="scroll"><table>
+      <thead><tr><th>✓</th><th>Destination</th><th>Requête</th><th>Données conservées</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel"><h2>Résultat</h2><div id="result" class="muted">En attente.</div></section>
+  <script src="anthropic_filter.js"></script>
+</body>
+</html>

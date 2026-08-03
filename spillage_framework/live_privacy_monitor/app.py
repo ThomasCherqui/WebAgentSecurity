@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import asyncio
 import os
+import secrets
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
@@ -17,6 +19,12 @@ HERE = Path(__file__).resolve().parent
 PROFILE_DIR = Path(os.getenv("PRIVACY_MONITOR_PROFILE", HERE / ".chrome-profile"))
 capture = CDPCapture(port=int(os.getenv("CDP_PORT", "9222")))
 app = FastAPI(title="Live Privacy Monitor", version="0.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:8787", "http://localhost:8787"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-Privacy-Token", "ngrok-skip-browser-warning"],
+)
 
 
 class ManualEvent(BaseModel):
@@ -82,7 +90,13 @@ def add_event(request: ManualEvent) -> dict[str, Any]:
 
 
 @app.post("/api/analyze")
-async def analyze_capture(request: AnalysisRequest) -> dict[str, Any]:
+async def analyze_capture(
+    request: AnalysisRequest,
+    x_privacy_token: str | None = Header(default=None),
+) -> dict[str, Any]:
+    expected_token = os.getenv("PRIVACY_MONITOR_TOKEN")
+    if expected_token and not secrets.compare_digest(x_privacy_token or "", expected_token):
+        raise HTTPException(status_code=401, detail="Secret partagé invalide")
     selected_events = request.events if request.events is not None else capture.snapshot()
     if not selected_events:
         raise HTTPException(status_code=400, detail="Aucun événement à analyser")
