@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -21,45 +21,42 @@
     td.url { max-width:420px; overflow-wrap:anywhere } td.payload { max-width:380px; white-space:pre-wrap; overflow-wrap:anywhere }
     .scroll { max-height:470px; overflow:auto } pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#0b1116; padding:12px; border-radius:8px }
     .danger { color:#ff9f94 } .success { color:#74dfad }
+    .verdict { display:inline-block; padding:8px 12px; border-radius:999px; font-weight:750 }
+    .verdict.good { background:#153f32; color:#83e8bb } .verdict.bad { background:#4a2222; color:#ffaaa0 }
+    .summary { font-size:17px; line-height:1.55 } .meta { color:#8e9da9; font-size:13px; margin-top:18px }
+    .violations>div { border-left:3px solid #ff8f83; padding-left:12px; margin:12px 0 }
     @media(max-width:760px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <h1>HAR Privacy Uploader</h1>
-  <p class="muted">Filtrage local → validation humaine → FastAPI via ngrok</p>
+  <p class="muted">Load a HAR → reconstruct the steps → analyze with the LLM Council</p>
 
-  <section class="panel grid">
-    <label>Fichier HAR
+  <section class="panel">
+    <label>HAR file
       <input id="har" type="file" accept=".har,application/json">
     </label>
-    <label>URL ngrok du serveur
-      <input id="server" type="url" placeholder="https://xxxx.ngrok-free.app">
+    <label>Task given to Claude
+      <textarea id="goal" placeholder="E.g. buy a product without sharing my address before confirmation"></textarea>
     </label>
-    <label>But donné à Claude
-      <textarea id="goal" placeholder="Ex. acheter un produit sans communiquer mon adresse avant validation"></textarea>
-    </label>
-    <label>Secret partagé
-      <input id="token" type="password" placeholder="Même valeur que PRIVACY_MONITOR_TOKEN">
-    </label>
-    <div>
-      <label><input id="mock" type="checkbox"> Test serveur sans Ollama</label>
-    </div>
   </section>
 
   <section class="panel">
-    <div class="stats" id="stats"><span class="pill">Aucun HAR chargé</span></div>
+    <div class="stats" id="stats"><span class="pill">No HAR loaded</span></div>
     <p>
-      <button id="all" class="secondary" disabled>Tout sélectionner</button>
-      <button id="none" class="secondary" disabled>Tout désélectionner</button>
-      <button id="send" disabled>Envoyer la sélection et analyser</button>
+      <button id="all" class="secondary" disabled>Select all</button>
+      <button id="none" class="secondary" disabled>Deselect all</button>
+      <button id="send" disabled>Analyze with the LLM Council</button>
     </p>
     <div class="scroll"><table>
-      <thead><tr><th>✓</th><th>Destination</th><th>Requête</th><th>Données conservées</th></tr></thead>
+      <thead><tr><th>✓</th><th>Destination</th><th>Request</th><th>Retained data</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </section>
 
-  <section class="panel"><h2>Résultat</h2><div id="result" class="muted">En attente.</div></section>
-  <script src="anthropic_filter.js"></script>
+  <section class="panel result-panel"><div id="result" class="muted">Load a HAR file to begin.</div></section>
+  <script src="anthropic_filter.js?v=5"></script>
+  <script src="result_view.js?v=2"></script>
+  <script src="step_result_view.js?v=2"></script>
 </body>
 </html>

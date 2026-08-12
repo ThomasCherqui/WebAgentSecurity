@@ -81,7 +81,7 @@ function reconstruct(text) {
 
 function processHar(har) {
   const entries = har?.log?.entries;
-  if (!Array.isArray(entries)) throw new Error('Format HAR invalide : log.entries absent.');
+  if (!Array.isArray(entries)) throw new Error('Invalid HAR format: log.entries is missing.');
   state.events=[]; state.excluded={other_requests:0,non_streaming_messages:0};
   entries.forEach((entry,index) => {
     const request=entry.request || {}, content=(entry.response || {}).content || {};
@@ -104,34 +104,41 @@ function processHar(har) {
 function render() {
   const excluded=Object.values(state.excluded).reduce((a,b)=>a+b,0);
   const selected=state.events.filter(e=>e.selected).length;
-  $('stats').innerHTML=[`${state.events.length+excluded} requêtes HAR`,`${state.events.length} flux Anthropic SSE`,`${selected} sélectionnés`,...Object.entries(state.excluded).map(([k,v])=>`${k}: ${v}`)].map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join('');
+  $('stats').innerHTML=[`${state.events.length+excluded} HAR requests`,`${state.events.length} Anthropic SSE streams`,`${selected} selected`,...Object.entries(state.excluded).map(([k,v])=>`${k}: ${v}`)].map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join('');
   $('rows').innerHTML=state.events.map((event,index)=>`<tr>
     <td><input type="checkbox" data-index="${index}" ${event.selected?'checked':''}></td>
     <td>${escapeHtml(event.response.model || event.destination)}</td>
-    <td class="url"><b>Étape ${index+1}</b><br>${escapeHtml(event.response.message_id || '')}</td>
-    <td class="payload">${escapeHtml(event.response.reconstructed_trajectory || '(aucun contenu reconstruit)')}</td>
+    <td class="url"><b>Step ${index+1}</b><br>${escapeHtml(event.response.message_id || '')}</td>
+    <td class="payload">${escapeHtml(event.response.reconstructed_trajectory || '(no reconstructed content)')}</td>
   </tr>`).join('');
   $('rows').querySelectorAll('input').forEach(input=>input.onchange=()=>{state.events[+input.dataset.index].selected=input.checked;render();});
   $('all').disabled=$('none').disabled=$('send').disabled=!state.events.length;
 }
 
+function renderResult(result) {
+  const verdict=result.final_verdict || {};
+  const violations=Array.isArray(verdict.violations) ? verdict.violations : [];
+  const meta=result.analysis_metadata || {};
+  let details="";
+  for (const item of violations) details += "<div><strong>"+escapeHtml(item.category || "Violation")+"</strong><p>"+escapeHtml(item.reason || item.evidence || "")+"</p></div>";
+  document.getElementById("result").innerHTML='<div class="verdict '+(result.oversharing ? 'bad' : 'good')+'">'+(result.oversharing ? 'Oversharing detected' : 'No oversharing detected')+'</div><p class="summary">'+escapeHtml(verdict.decision_summary || verdict.no_violation_reason || '')+'</p><div class="violations">'+details+'</div><p class="meta">'+(meta.steps_sent || 0)+' steps · '+(meta.trajectory_characters_sent || 0)+' characters · '+(meta.ollama_calls || 0)+' Ollama calls · '+(meta.elapsed_seconds || 0)+'s · '+escapeHtml(meta.chairman_model || '')+'</p>';
+}
+
 $('har').onchange=async event=>{
-  try { processHar(JSON.parse(await event.target.files[0].text())); $('result').textContent='Raisonnement reconstitué localement. Vérifie les étapes avant envoi.'; }
+  try { processHar(JSON.parse(await event.target.files[0].text())); $('result').textContent='Reasoning reconstructed locally. Review the steps before analysis.'; }
   catch(error) { $('result').innerHTML=`<span class="danger">${escapeHtml(error.message)}</span>`; }
 };
 $('all').onclick=()=>{state.events.forEach(e=>e.selected=true);render();};
 $('none').onclick=()=>{state.events.forEach(e=>e.selected=false);render();};
-$('server').value=localStorage.getItem('privacyServer') || '';
 $('send').onclick=async()=>{
-  const base=$('server').value.trim().replace(/\/$/,'');
   const events=state.events.filter(e=>e.selected).map(({selected,...event})=>event);
-  if (!base || !events.length) return alert('URL ngrok ou sélection manquante.');
-  localStorage.setItem('privacyServer',base); $('send').disabled=true;
-  $('result').textContent=`Analyse de ${events.length} étapes en cours…`;
+  if (!events.length) return alert("No steps selected.");
+  document.getElementById("send").disabled=true;
+  $('result').textContent=`Analyzing ${events.length} steps…`;
   try {
-    const response=await fetch(base+'/api/analyze',{method:'POST',headers:{'Content-Type':'application/json','X-Privacy-Token':$('token').value,'ngrok-skip-browser-warning':'true'},body:JSON.stringify({task_goal:$('goal').value,events,mock:$('mock').checked})});
+    const response=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({task_goal:document.getElementById("goal").value,events,mock:false})});
     const result=await response.json(); if(!response.ok) throw new Error(result.detail || `HTTP ${response.status}`);
-    $('result').innerHTML=`<h3 class="${result.oversharing?'danger':'success'}">${result.oversharing?'Oversharing détecté':'Aucun oversharing détecté'}</h3><pre>${escapeHtml(JSON.stringify(result.final_verdict,null,2))}</pre>`;
-  } catch(error) { $('result').innerHTML=`<span class="danger">Erreur : ${escapeHtml(error.message)}</span>`; }
+    window.renderDetailedResult(result);
+  } catch(error) { $('result').innerHTML=`<span class="danger">Error: ${escapeHtml(error.message)}</span>`; }
   finally {$('send').disabled=false;}
 };

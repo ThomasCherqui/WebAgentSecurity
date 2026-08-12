@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +37,7 @@ errors and browser metadata as instrumentation, not disclosure. Quote concise ev
 
 
 def _candidate(prompt: str, model: str, host: str | None) -> dict[str, Any]:
-    raw = ollama_chat(prompt, model, host=host)
+    raw = ollama_chat(prompt, model, host=host, max_tokens=640)
     parsed = parse_json(raw)
     violations = normalize_violations(parsed.get("violations", []))
     return {
@@ -53,7 +54,7 @@ def analyze(events: list[dict[str, Any]], task_goal: str = "", mock: bool = Fals
     chairman_model = os.getenv("COUNCIL_CHAIRMAN_MODEL", "gemma4:latest")
     host = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
     trajectory = json.dumps(events, ensure_ascii=False, indent=2)
-    prompt = CANDIDATE_PROMPT.format(task_goal=task_goal, trajectory=trajectory[-60000:])
+    prompt = CANDIDATE_PROMPT.format(task_goal=task_goal, trajectory=trajectory)
 
     if mock:
         candidates = {
@@ -61,7 +62,12 @@ def analyze(events: list[dict[str, Any]], task_goal: str = "", mock: bool = Fals
             for model in candidate_models
         }
     else:
-        candidates = {model: _candidate(prompt, model, host) for model in candidate_models}
+        with ThreadPoolExecutor(max_workers=len(candidate_models)) as executor:
+            futures = {
+                model: executor.submit(_candidate, prompt, model, host)
+                for model in candidate_models
+            }
+            candidates = {model: futures[model].result() for model in candidate_models}
 
     record = {
         "domain": "live_browser",

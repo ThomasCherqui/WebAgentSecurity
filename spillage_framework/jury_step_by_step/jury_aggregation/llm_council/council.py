@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import string
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -140,7 +141,7 @@ def run_step(
     review_template = load_template("review_verdict.md")
     review_prompt = render(review_template, prompt_context(record, labelled))
 
-    for reviewer_model in reviewer_models:
+    def run_review(reviewer_model: str) -> Dict[str, Any]:
         if mock:
             raw_response = json.dumps({
                 "choice": valid_labels[0] if valid_labels else "",
@@ -148,10 +149,23 @@ def run_step(
                 "reason": "mock review",
             })
         else:
-            raw_response = safe_ollama_chat(review_prompt, reviewer_model, host=host, allow_errors=allow_errors)
+            raw_response = safe_ollama_chat(
+                review_prompt,
+                reviewer_model,
+                host=host,
+                allow_errors=allow_errors,
+                max_tokens=512,
+            )
         review = normalize_review(raw_response, valid_labels)
         review["reviewer_model"] = reviewer_model
-        reviews.append(review)
+        return review
+
+    with ThreadPoolExecutor(max_workers=len(reviewer_models)) as executor:
+        futures = {
+            reviewer_model: executor.submit(run_review, reviewer_model)
+            for reviewer_model in reviewer_models
+        }
+        reviews = [futures[model].result() for model in reviewer_models]
 
     chosen_label = choose_label_from_reviews(reviews, valid_labels)
 
@@ -160,8 +174,18 @@ def run_step(
         chairman_response = json.dumps(final_verdict, ensure_ascii=False)
     else:
         chairman_template = load_template("chairman_verdict.md")
-        chairman_prompt = render(chairman_template, prompt_context(record, labelled, {"reviews": reviews}))
-        chairman_response = safe_ollama_chat(chairman_prompt, chairman_model, host=host, allow_errors=allow_errors)
+        compact_reviews = [
+            {key: value for key, value in review.items() if key != "response"}
+            for review in reviews
+        ]
+        chairman_prompt = render(chairman_template, prompt_context(record, labelled, {"reviews": compact_reviews}))
+        chairman_response = safe_ollama_chat(
+            chairman_prompt,
+            chairman_model,
+            host=host,
+            allow_errors=allow_errors,
+            max_tokens=768,
+        )
         final_verdict = normalize_chairman(chairman_response)
 
     return {

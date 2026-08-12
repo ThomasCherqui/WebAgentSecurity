@@ -6,6 +6,7 @@ import json
 import re
 import sys
 from collections import defaultdict
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
@@ -41,6 +42,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--behavior-model", default="qwen2.5:72b")
     parser.add_argument("--verifier-model", default="qwen2.5:72b")
     parser.add_argument("--chairman-model", default="qwen2.5:72b")
+    parser.add_argument(
+        "--fallback-model",
+        default="qwen3.5:397b-cloud",
+        help="Model used after two invalid JSON responses from verifier or chairman.",
+    )
     parser.add_argument("--explainability-results-root", type=Path, default=EXPLAINABILITY_RESULTS_ROOT)
     parser.add_argument("--tasks-dir", type=Path, default=TASKS_DIR)
     parser.add_argument("--output-root", type=Path, default=RESULTS_ROOT)
@@ -50,6 +56,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit-steps", type=int, default=0)
     parser.add_argument("--ollama-host", default=None)
     parser.add_argument("--resume-existing", action="store_true")
+    parser.add_argument("--skip-errors", action="store_true", help="Log failed steps and continue processing the remaining records.")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Maximum number of trajectory steps evaluated concurrently (default: 1).",
+    )
     parser.add_argument("--mock", action="store_true", help="Validate the complete workflow without calling Ollama.")
     return parser.parse_args()
 
@@ -144,6 +157,7 @@ def summary_payload(args: argparse.Namespace, rows: List[Dict[str, Any]], output
             "behavior": args.behavior_model,
             "verifier": args.verifier_model,
             "chairman": args.chairman_model,
+            "fallback": args.fallback_model,
         },
         "num_steps": len(rows),
         "steps_with_candidate_disagreement": disputes,
@@ -154,6 +168,8 @@ def summary_payload(args: argparse.Namespace, rows: List[Dict[str, Any]], output
 
 def main() -> None:
     args = parse_args()
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
     output_dir = args.output_dir or args.output_root / args.domain / args.prompt_slug / slug(args.run_name or agentic_slug(args))
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -171,33 +187,66 @@ def main() -> None:
     completed: Set[StepKey] = {row_key(row) for row in rows}
     persona_outputs: Dict[str, Dict[str, Any]] = defaultdict(dict)
 
+    pending: List[Tuple[int, Dict[str, Any], StepKey]] = []
     for index, record in enumerate(records, start=1):
         key = str(record.get("persona", "")), normalize_step(record.get("step", 0))
         if key in completed:
             continue
-        print(f"[{index}/{len(records)}] persona={key[0]} step={key[1]}")
-        result = run_step(
+        pending.append((index, record, key))
+
+    def evaluate(record: Dict[str, Any]) -> Dict[str, Any]:
+        return run_step(
             record,
             content_model=args.content_model,
             behavior_model=args.behavior_model,
             verifier_model=args.verifier_model,
             chairman_model=args.chairman_model,
+            fallback_model=args.fallback_model,
             host=args.ollama_host,
             mock=args.mock,
         )
-        if not persona_outputs[key[0]] and args.resume_existing:
-            persona_outputs[key[0]] = read_json_object(output_dir / f"{key[0]}.json")
-        persona_outputs[key[0]][f"Step {key[1]}"] = result
-        rows.append(row_from_result(result, args))
-        completed.add(key)
 
-        write_json(output_dir / f"{key[0]}.json", persona_outputs[key[0]])
-        write_predictions(predictions_path, rows)
-        write_json(output_dir / "summary.json", summary_payload(args, rows, output_dir))
+    print(f"Starting {len(pending)} pending steps with {args.workers} worker(s).", flush=True)
+    with ThreadPoolExecutor(max_workers=args.workers, thread_name_prefix="agentic-council") as executor:
+        futures: Dict[Future[Dict[str, Any]], Tuple[int, StepKey]] = {
+            executor.submit(evaluate, record): (index, key)
+            for index, record, key in pending
+        }
+        for future in as_completed(futures):
+            index, key = futures[future]
+            try:
+                result = future.result()
+            except Exception as exc:
+                if not args.skip_errors:
+                    raise
+                error_path = output_dir / "skipped_errors.jsonl"
+                with error_path.open("a", encoding="utf-8") as error_file:
+                    error_file.write(json.dumps({
+                        "persona": key[0],
+                        "step": key[1],
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    }, ensure_ascii=False) + "\n")
+                print(
+                    f"SKIP [{index}/{len(records)}]: persona={key[0]} step={key[1]}: "
+                    f"{type(exc).__name__}: {exc}",
+                    flush=True,
+                )
+                continue
+
+            if not persona_outputs[key[0]] and args.resume_existing:
+                persona_outputs[key[0]] = read_json_object(output_dir / f"{key[0]}.json")
+            persona_outputs[key[0]][f"Step {key[1]}"] = result
+            rows.append(row_from_result(result, args))
+            completed.add(key)
+
+            write_json(output_dir / f"{key[0]}.json", persona_outputs[key[0]])
+            write_predictions(predictions_path, rows)
+            write_json(output_dir / "summary.json", summary_payload(args, rows, output_dir))
+            print(f"DONE [{index}/{len(records)}] persona={key[0]} step={key[1]}", flush=True)
 
     print(f"Done. Wrote {len(rows)} agentic council verdicts to {output_dir}")
 
 
 if __name__ == "__main__":
     main()
-

@@ -49,7 +49,13 @@ def parse_json_object(text: str) -> Dict[str, Any] | None:
             return None
 
 
-def call_json(prompt: str, model: str, host: str | None, mock_response: Dict[str, Any] | None = None) -> Tuple[Dict[str, Any], str]:
+def call_json(
+    prompt: str,
+    model: str,
+    host: str | None,
+    mock_response: Dict[str, Any] | None = None,
+    fallback_model: str | None = None,
+) -> Tuple[Dict[str, Any], str]:
     if mock_response is not None:
         raw = json.dumps(mock_response, ensure_ascii=False)
         return mock_response, raw
@@ -67,9 +73,34 @@ def call_json(prompt: str, model: str, host: str | None, mock_response: Dict[str
     )
     repaired = safe_ollama_chat(repair_prompt, model, host=host)
     parsed = parse_json_object(repaired)
-    if parsed is None:
-        raise ValueError(f"Model {model!r} returned invalid JSON twice")
-    return parsed, repaired
+    if parsed is not None:
+        return parsed, repaired
+
+    if fallback_model and fallback_model != model:
+        print(
+            f"WARN: model {model!r} returned invalid JSON twice; "
+            f"retrying with fallback {fallback_model!r}",
+            flush=True,
+        )
+        fallback_raw = safe_ollama_chat(prompt, fallback_model, host=host)
+        parsed = parse_json_object(fallback_raw)
+        if parsed is not None:
+            return parsed, fallback_raw
+        fallback_repair_prompt = (
+            prompt
+            + "\n\nYour previous response was not valid JSON. Return only one valid JSON object "
+            + "matching the requested schema. Previous response:\n"
+            + fallback_raw
+        )
+        fallback_repaired = safe_ollama_chat(fallback_repair_prompt, fallback_model, host=host)
+        parsed = parse_json_object(fallback_repaired)
+        if parsed is not None:
+            return parsed, fallback_repaired
+        raise ValueError(
+            f"Models {model!r} and fallback {fallback_model!r} both returned invalid JSON twice"
+        )
+
+    raise ValueError(f"Model {model!r} returned invalid JSON twice")
 
 
 def compact_candidates(candidates: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
@@ -226,13 +257,27 @@ def normalize_verification(parsed: Mapping[str, Any]) -> Dict[str, Dict[str, Any
     return decisions
 
 
-def run_verifier(record: Mapping[str, Any], proposals: Mapping[str, Mapping[str, Any]], model: str, host: str | None, mock: bool) -> Dict[str, Any]:
+def run_verifier(
+    record: Mapping[str, Any],
+    proposals: Mapping[str, Mapping[str, Any]],
+    model: str,
+    host: str | None,
+    mock: bool,
+    fallback_model: str | None = None,
+) -> Dict[str, Any]:
     values = base_context(record)
     values["proposals"] = proposals
     prompt = render(load_template("verifier.md"), values)
-    parsed, response = call_json(prompt, model, host, mock_verifier(record, proposals) if mock else None)
+    parsed, response = call_json(
+        prompt,
+        model,
+        host,
+        mock_verifier(record, proposals) if mock else None,
+        fallback_model=fallback_model,
+    )
     return {
         "model": model,
+        "fallback_model": fallback_model or "",
         "categories": normalize_verification(parsed),
         "summary": str(parsed.get("summary") or ""),
         "response": response,
@@ -274,11 +319,25 @@ def final_from_decisions(parsed: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
-def run_chairman(record: Mapping[str, Any], proposals: Mapping[str, Any], verification: Mapping[str, Any], model: str, host: str | None, mock: bool) -> Tuple[Dict[str, Any], str]:
+def run_chairman(
+    record: Mapping[str, Any],
+    proposals: Mapping[str, Any],
+    verification: Mapping[str, Any],
+    model: str,
+    host: str | None,
+    mock: bool,
+    fallback_model: str | None = None,
+) -> Tuple[Dict[str, Any], str]:
     values = base_context(record)
     values.update({"proposals": proposals, "verification": verification})
     prompt = render(load_template("chairman.md"), values)
-    parsed, response = call_json(prompt, model, host, mock_chairman(verification) if mock else None)
+    parsed, response = call_json(
+        prompt,
+        model,
+        host,
+        mock_chairman(verification) if mock else None,
+        fallback_model=fallback_model,
+    )
     return final_from_decisions(parsed), response
 
 
@@ -288,6 +347,7 @@ def run_step(
     behavior_model: str,
     verifier_model: str,
     chairman_model: str,
+    fallback_model: str | None = "qwen3.5:397b-cloud",
     host: str | None = None,
     mock: bool = False,
 ) -> Dict[str, Any]:
@@ -297,8 +357,12 @@ def run_step(
     content_debate = run_debate(record, content, [cat for cat in disputed if cat in CONTENT_CATEGORIES], content_model, host, mock)
     behavior_debate = run_debate(record, behavior, [cat for cat in disputed if cat in BEHAVIOR_CATEGORIES], behavior_model, host, mock)
     proposals = merged_proposals([content, behavior], [content_debate, behavior_debate])
-    verification = run_verifier(record, proposals, verifier_model, host, mock)
-    final_verdict, chairman_response = run_chairman(record, proposals, verification, chairman_model, host, mock)
+    verification = run_verifier(
+        record, proposals, verifier_model, host, mock, fallback_model=fallback_model
+    )
+    final_verdict, chairman_response = run_chairman(
+        record, proposals, verification, chairman_model, host, mock, fallback_model=fallback_model
+    )
 
     return {
         "domain": record.get("domain", ""),
@@ -315,6 +379,7 @@ def run_step(
         "proposals": proposals,
         "verification": verification,
         "chairman_model": chairman_model,
+        "fallback_model": fallback_model or "",
         "chairman_response": chairman_response,
         "final_verdict": final_verdict,
     }

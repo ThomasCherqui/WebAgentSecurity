@@ -17,11 +17,12 @@ def normalize_ollama_host(host: str | None = None) -> str:
     return value
 
 
-def ollama_chat(prompt: str, model: str, host: str | None = None, temperature: float = 0.0, max_tokens: int = 4096) -> str:
+def ollama_chat(prompt: str, model: str, host: str | None = None, temperature: float = 0.0, max_tokens: int = 768) -> str:
     host = normalize_ollama_host(host)
     payload = {
         "model": model,
         "stream": False,
+        "format": "json",
         "messages": [
             {
                 "role": "system",
@@ -48,6 +49,12 @@ def ollama_chat(prompt: str, model: str, host: str | None = None, temperature: f
     return str((data.get("message") or {}).get("content", ""))
 
 
-def safe_ollama_chat(prompt: str, model: str, host: str | None = None, allow_errors: bool = False) -> str:
+def safe_ollama_chat(
+    prompt: str,
+    model: str,
+    host: str | None = None,
+    allow_errors: bool = False,
+    max_tokens: int = 768,
+) -> str:
     _ = allow_errors
-    return ollama_chat(prompt, model, host=host)
+    return ollama_chat(prompt, model, host=host, max_tokens=max_tokens)
