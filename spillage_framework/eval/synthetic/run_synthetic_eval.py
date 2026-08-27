@@ -282,6 +282,26 @@ def read_results(path: Path) -> dict[str, dict[str, Any]]:
     return rows
 
 
+def evaluation_id(record_id: str) -> str:
+    """Map legacy result IDs to current gold IDs after label-only migrations."""
+    if record_id.endswith("_BE_query"):
+        return record_id[: -len("_BE_query")] + "_CE_query"
+    return record_id
+
+
+def read_evaluation_results(path: Path) -> dict[str, dict[str, Any]]:
+    """Read predictions with evaluation-only ID normalization."""
+    normalized: dict[str, dict[str, Any]] = {}
+    for source_id, row in read_results(path).items():
+        record_id = evaluation_id(source_id)
+        if record_id in normalized:
+            raise ValueError(
+                f"Duplicate evaluation id {record_id!r} after normalizing {path}"
+            )
+        normalized[record_id] = row
+    return normalized
+
+
 def rewrite_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -571,6 +591,94 @@ def binary_metrics(gold: list[int], predicted: list[int]) -> dict[str, float | i
     }
 
 
+def evaluate_agentdam_vs_council(
+    records: list[dict[str, Any]],
+    output_dir: Path,
+    metrics_dir: Path,
+) -> None:
+    agentdam_path = output_dir.parent / "agentdam" / "predictions.jsonl"
+    council_path = output_dir / "llm_council" / "predictions.jsonl"
+    if not agentdam_path.exists() or not council_path.exists():
+        missing_path = agentdam_path if not agentdam_path.exists() else council_path
+        print(f"Skipping AgentDAM/Council comparison: missing {missing_path}")
+        return
+
+    gold = {
+        evaluation_id(str(record["id"])): normalize_labels(record["expected"])
+        for record in records
+    }
+    agentdam = read_evaluation_results(agentdam_path)
+    council = read_evaluation_results(council_path)
+    missing_agentdam = set(gold) - set(agentdam)
+    missing_council = set(gold) - set(council)
+    if missing_agentdam or missing_council:
+        print(
+            "Skipping AgentDAM/Council comparison: "
+            f"AgentDAM missing={len(missing_agentdam)}, Council missing={len(missing_council)}"
+        )
+        return
+
+    record_ids = list(gold)
+    gold_ce = [gold[record_id]["CE"] for record_id in record_ids]
+    gold_any = [
+        int(any(gold[record_id][category] for category in CATEGORIES))
+        for record_id in record_ids
+    ]
+    agentdam_binary = [
+        int(float(agentdam[record_id].get("agentdam_score", 0) or 0) > 0)
+        for record_id in record_ids
+    ]
+    council_labels = {
+        record_id: normalize_labels(council[record_id]["prediction"])
+        for record_id in record_ids
+    }
+    council_ce = [council_labels[record_id]["CE"] for record_id in record_ids]
+    council_any = [
+        int(any(council_labels[record_id][category] for category in CATEGORIES))
+        for record_id in record_ids
+    ]
+
+    comparisons = (
+        ("CE_only", "agentdam", gold_ce, agentdam_binary),
+        ("CE_only", "llm_council", gold_ce, council_ce),
+        ("oversharing_any_label", "agentdam", gold_any, agentdam_binary),
+        ("oversharing_any_label", "llm_council", gold_any, council_any),
+    )
+    rows = [
+        {
+            "scope": scope,
+            "system": system,
+            "rows": len(record_ids),
+            **binary_metrics(gold_values, predicted_values),
+        }
+        for scope, system, gold_values, predicted_values in comparisons
+    ]
+
+    json_path = metrics_dir / "agentdam_vs_llm_council.json"
+    csv_path = metrics_dir / "agentdam_vs_llm_council.csv"
+    json_path.write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        fieldnames = [
+            "scope",
+            "system",
+            "rows",
+            "tp",
+            "tn",
+            "fp",
+            "fn",
+            "accuracy",
+            "precision",
+            "recall",
+            "f1",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"Wrote AgentDAM/Council comparison to {csv_path}")
+
+
 def evaluate(records: list[dict[str, Any]], output_dir: Path, paths: dict[str, Path]) -> None:
     result_paths = {
         **{key: path for key, path in paths.items()},
@@ -578,12 +686,15 @@ def evaluate(records: list[dict[str, Any]], output_dir: Path, paths: dict[str, P
         "hybrid": output_dir / "aggregation" / "hybrid.jsonl",
         "llm_council": output_dir / "llm_council" / "predictions.jsonl",
     }
-    gold = {str(record["id"]): normalize_labels(record["expected"]) for record in records}
+    gold = {
+        evaluation_id(str(record["id"])): normalize_labels(record["expected"])
+        for record in records
+    }
     summary_rows: list[dict[str, Any]] = []
     details: dict[str, Any] = {}
 
     for stage, path in result_paths.items():
-        predictions = read_results(path)
+        predictions = read_evaluation_results(path)
         missing = set(gold) - set(predictions)
         if missing:
             print(f"Skipping metrics for {stage}: {len(missing)} missing predictions")
@@ -637,6 +748,7 @@ def evaluate(records: list[dict[str, Any]], output_dir: Path, paths: dict[str, P
         writer.writeheader()
         writer.writerows(sorted(summary_rows, key=lambda row: row["macro_f1"], reverse=True))
     print(f"Wrote metrics for {len(summary_rows)} stages to {metrics_dir}")
+    evaluate_agentdam_vs_council(records, output_dir, metrics_dir)
 
 
 def main() -> None:
@@ -648,7 +760,8 @@ def main() -> None:
         raise SystemExit(f"Prompt template not found: {args.prompt_template}")
     args.prompt_template_text = args.prompt_template.read_text(encoding="utf-8")
     args.prompt_slug = slug(args.prompt_template.stem)
-    args.output_dir = args.output_dir / args.prompt_slug
+    if args.output_dir.name != args.prompt_slug:
+        args.output_dir = args.output_dir / args.prompt_slug
     models = {
         "gemma": args.gemma_model,
         "gpt-oss": args.gpt_oss_model,
