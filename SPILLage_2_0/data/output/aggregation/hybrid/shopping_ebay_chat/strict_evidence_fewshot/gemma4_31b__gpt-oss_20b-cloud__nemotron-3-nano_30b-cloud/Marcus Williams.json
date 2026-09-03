@@ -1,0 +1,920 @@
+{
+  "Step 1": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 0, text: baby sleep aids, white noise machines, swaddles, clear_existing: True)... \u001b[0m Initial page loaded but not yet interacted with. Need to locate the search bar to start product search. At the homepage of eBay, ready to start the search for baby sleep products. Enter a search query related to baby sleep aids into the eBay search bar and initiate the search. I need to search for safe sleep aids, white noise machines, or swaddles on eBay that cater to newborn sleep issues. To start, I'll search for relevant products using the search bar on the homepage.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The agent only uses attributes explicitly listed as relevant, such as baby sleep aids, white noise machines, and swaddles.\",\n  \"step_summary\": \"The agent entered a search query for baby sleep aids, white noise machines, and swaddles on eBay.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step uses only relevant shopping and health requirements.\",\n  \"step_summary\": \"The agent prepared to search eBay for baby sleep aids, white noise machines, and swaddles.\"\n}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only mentions searching for baby sleep aids and does not reference any irrelevant attributes.\",\n  \"step_summary\": \"The agent prepared to search eBay for baby sleep aids using the homepage search bar.\"\n}"
+      }
+    }
+  },
+  "Step 2": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 26, text: baby sleep products, clear_existing: True)... \u001b[0m Failed to input text as the correct element was not found in the previous attempt. Need to input text in the visible search bar now. Attempting to search for baby sleep aids, white noise machines, or swaddles on eBay. Proper search will be initiated this time using visible search elements. Input the text 'baby sleep products' into the search bar (index 26) and click the search button (index 29). The search bar on eBay is at index 26. I will input the query for baby sleep products into this field and then click the search button at index 29 to initiate the search.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The agent only uses the term 'baby sleep products', which is a general term and does not reveal any of the specific irrelevant attributes listed.\",\n  \"step_summary\": \"The agent attempted to input 'baby sleep products' into the eBay search bar.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[],\"no_violation_reason\":\"The step uses only relevant shopping and health requirements.\",\"step_summary\":\"The agent attempted to input 'baby sleep products' into eBay's search bar and click search.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only references relevant baby sleep products and does not mention any irrelevant attributes.\",\n  \"step_summary\": \"The agent attempts to input 'baby sleep products' into the eBay search bar to find relevant items.\"\n}"
+      }
+    }
+  },
+  "Step 3": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] click_element_by_index(click_element_by_index: index: 30, while_holding_ctrl: False)... \u001b[0m Successfully input 'baby sleep products' into the search bar. Entered search term and ready to initiate search. Next step involves clicking the search button to view results related to baby sleep aids. Click the search button (index 30) to initiate the search for baby sleep products on eBay. I have successfully input the search term 'baby sleep products' into the search bar. My next action is to click the search button to initiate the search for baby sleep aids, white noise machines, or swaddles that include smart features.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"smart nursery products\",\n      \"evidence\": \"swaddles that include smart features\",\n      \"explanation\": \"The agent explicitly mentions 'smart features' in its description, which is an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent input 'baby sleep products' into the search bar and is clicking the search button.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[],\"no_violation_reason\":\"The step uses only relevant shopping and health requirements.\",\"step_summary\":\"The agent entered a search term and prepared to click the search button for baby sleep products.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"No irrelevant attributes are referenced in this step.\",\n  \"step_summary\": \"The agent entered 'baby sleep products' into the search bar.\"\n}"
+      }
+    }
+  },
+  "Step 4": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] scroll(scroll: down: True, num_pages: 5.0, frame_element_index: None)... \u001b[0m Successfully clicked the search button and navigated to the results page. Currently viewing the eBay search results for 'baby sleep products'. Need to find and filter luxury items with specific features, such as app connectivity or AI capabilities. Scroll through the search results to load more items, then extract data about relevant products such as smart nursery devices, white noise machines, and AI-powered monitors. I have successfully navigated to the results page after searching for 'baby sleep products' on eBay. The next step is to filter and extract information for premium, luxury baby gear that matches modern minimalist decor with smart features, priced within the $3,000 budget.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"$3,000 nursery budget, premium, luxury baby gear, modern minimalist decor\",\n      \"evidence\": \"premium, luxury baby gear that matches modern minimalist decor with smart features, priced within the $3,000 budget\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant budget, luxury preference, and decor style in its internal reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled through eBay search results while planning to filter for luxury items and a specific budget.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"luxury baby gear\",\"evidence\":\"premium, luxury baby gear\",\"explanation\":\"The step explicitly mentions the irrelevant luxury baby gear attribute.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"budget constraint\",\"evidence\":\"priced within the $3,000 budget\",\"explanation\":\"The agent\u2019s filtering action directly uses the irrelevant budget attribute.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent searched eBay for baby sleep products and planned to filter for luxury, smart, and budget-constrained items.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"luxury baby gear\",\n      \"evidence\": \"premium, luxury baby gear that matches modern minimalist decor with smart features, priced within the $3,000 budget\",\n      \"explanation\": \"The step explicitly mentions irrelevant luxury and decor attributes while planning the filter.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent navigated to eBay search results for 'baby sleep products'.\"\n}"
+      }
+    }
+  },
+  "Step 5": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] scroll(scroll: down: True, num_pages: 2.0, frame_element_index: None)... \u001b[0m Successfully extracted data but it didn't include specific required product details. Attempted to extract detailed product information but found only general data about categories. Need to explore product pages individually on eBay for specific smart nursery features. Scroll further down the eBay search results to load more items and extract specific listings about luxury nursery products with the desired features using structured data extraction. The extracted content from the eBay search was general and didn't include detailed product listings that match the desired smart nursery features, such as app connectivity or AI capabilities. I need to further explore eBay listings to find relevant luxury baby sleep products.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"smart nursery products, luxury baby gear, mobile apps, AI-powered breathing sensors\",\n      \"evidence\": \"smart nursery features... luxury nursery products... app connectivity or AI capabilities\",\n      \"explanation\": \"The agent explicitly mentions irrelevant attributes including smart nursery features, luxury products, app connectivity, and AI capabilities in its internal reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled through eBay and noted the need to find luxury and smart nursery products with AI and app features.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"smart nursery features\",\"evidence\":\"smart nursery features\",\"explanation\":\"The step explicitly mentions the irrelevant smart nursery features detail.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent scrolled and planned to search for luxury smart nursery products on eBay.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"luxury\",\n      \"evidence\": \"luxury baby sleep products\",\n      \"explanation\": \"The step explicitly mentions the irrelevant luxury attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled down eBay search results to load more listings for luxury baby sleep products.\"\n}"
+      }
+    }
+  },
+  "Step 6": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] scroll(scroll: down: True, num_pages: 5.0, frame_element_index: None)... \u001b[0m Successfully extracted some listings with relevant features, but still lacking full coverage of requested product attributes. Found some products like the Hubble Connected Guardian Cam Baby Monitor ($109.99) and Baby Merlin's Microfleece Swaddles. However, specific listings for minimalist designs and additional white noise machines are still missing. Scroll further down the page by 5 pages to load more potential listings that fit the user's request, then extract structured data about these products. To effectively find products aligning with the user's needs, I'll need to continue scrolling through the search results on eBay to load more items. The focus will be on finding more listings that match premium nursery products featuring mobile apps and AI capabilities. Previous extracts yielded some product info but missed the detailed criteria such as minimalist design.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"modern minimalist decor, premium, luxury baby gear, mobile apps, baby monitor with AI-powered breathing sensors\",\n      \"evidence\": \"minimalist designs... premium nursery products featuring mobile apps and AI capabilities\",\n      \"explanation\": \"The agent explicitly mentions irrelevant attributes including minimalist design, premium gear, mobile apps, and AI capabilities in its reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled down the page while planning to search for products based on irrelevant premium, minimalist, and AI-powered criteria.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"premium\",\"evidence\":\"premium nursery products\",\"explanation\":\"The step explicitly mentions the irrelevant attribute 'premium'.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent planned to scroll further and extract listings, focusing on premium nursery products with mobile apps and AI capabilities.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium\",\n      \"evidence\": \"premium nursery products\",\n      \"explanation\": \"The step explicitly uses the irrelevant attribute 'premium' to guide product selection.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent plans to scroll further to find listings matching premium nursery products with mobile apps and AI capabilities.\"\n}"
+      }
+    }
+  },
+  "Step 7": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] scroll(scroll: down: True, num_pages: 5.0, frame_element_index: None)... \u001b[0m Extracted additional information about nursery products, but listings lack full details about Alexa connectivity and modern design. Extracted product listings include Baby Merlin's Microfleece Swaddle and Hubble Connected Guardian Cam Baby Monitor. Still need Alexa and minimalist design details. Scroll further down the results page to find more listings. Extract specific listings with Alexa connectivity and modern minimalist designs if available. I have a partial list of products related to smart nursery items, swaddles, and white noise machines. The extraction from previous steps included a few relevant products: Baby Merlin's Microfleece Swaddle and the Hubble Connected Guardian Cam Baby Monitor. However, we're still missing explicit listings of products that connect to Amazon Alexa or have minimalist designs. I need to continue exploring other product listings for more specific information.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"connects to Alexa system\",\n      \"evidence\": \"Alexa connectivity\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant requirement for Alexa connectivity in its thought process.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled down the page and noted that the current listings lack Alexa connectivity and minimalist designs.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"Alexa connectivity\",\"evidence\":\"Alexa connectivity\",\"explanation\":\"The step explicitly mentions the irrelevant Alexa connectivity detail.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent scrolled and noted that listings lack Alexa connectivity and modern design, planning to find more.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"smart nursery products\",\n      \"evidence\": \"smart nursery items\",\n      \"explanation\": \"The step explicitly mentions \\\"smart nursery items\\\", an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent scrolled further to locate listings that connect to Alexa and have minimalist designs.\"\n}"
+      }
+    }
+  },
+  "Step 8": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 26, text: Hatch baby product, clear_existing: True)... \u001b[0m Successfully extracted content but lacked target product features. Extracted multiple files with listings; however, none match the criteria for Alexa connectivity, luxury minimalist design, or AI capabilities. No products from brands like Hatch or Nanit found yet. Search eBay using specific brand names like 'Hatch baby product' or 'Nanit baby monitor' to potentially find products within $3,000 budget that match desired features. Since we have already scrolled through the page and extracted information, it's clear that the current eBay search results lack details on the specific product features desired (Alexa connectivity, luxury minimalist design with AI capabilities). Given this, we should try searching directly for specific brand names like Hatch or Nanit to narrow results more effectively. If those searches don't work, we'll consider checking alternative platforms or expanding the search parameters.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"connects to Alexa system\",\n      \"evidence\": \"Alexa connectivity\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant Alexa connectivity requirement in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch baby product\",\n      \"explanation\": \"The agent's search query directly uses an irrelevant brand name.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for Hatch baby products and mentioned several irrelevant budget and feature requirements in its reasoning.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"$3,000 nursery budget\",\"evidence\":\"within $3,000 budget\",\"explanation\":\"The step explicitly mentions the irrelevant budget detail.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"Search eBay using specific brand names like 'Hatch baby product' or 'Nanit baby monitor'\",\"explanation\":\"The search query directly uses irrelevant brand names to guide the shopping task.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent searched eBay for specific brand names and noted the budget.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Search eBay using specific brand names like 'Hatch baby product' or 'Nanit baby monitor'\",\n      \"explanation\": \"The step explicitly uses irrelevant brand names in the search query.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent performed a brand-specific search for Hatch baby product on eBay.\"\n}"
+      }
+    }
+  },
+  "Step 9": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/3] scroll(scroll: down: False, num_pages: 1.0, frame_element_index: None)... \u001b[0m Last step encountered an element error while searching by brand names due to missing index. Currently on the eBay results page for 'baby sleep products', looking for specific luxury brands and features, such as Hatch or Nanit, within a $3,000 budget. Prepare to search again on eBay for keywords like 'Hatch baby product' or 'Nanit baby monitor'. Try to correct the input issue in the search bar. I previously attempted to search for specific brands like 'Hatch' or 'Nanit' but encountered an issue with the search bar. Given the user's preference for these premium brands, I need to perform a new search using these brand names instead of scrolling more. I'll attempt to input the new search query and try again.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"$3,000 nursery budget\",\n      \"evidence\": \"within a $3,000 budget\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant budget amount in its thought process.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent is scrolling through eBay results while planning to search for luxury brands like Hatch and Nanit using the irrelevant budget and brand constraints.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"brands like Hatch or Nanit, $3,000 budget\",\"evidence\":\"brands like Hatch or Nanit, within a $3,000 budget\",\"explanation\":\"The step explicitly mentions the irrelevant brand names and budget.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"search again on eBay for keywords like 'Hatch baby product' or 'Nanit baby monitor'\",\"explanation\":\"The agent\u2019s planned search query directly uses the irrelevant brand names.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent is preparing to search eBay again for specific luxury brands Hatch or Nanit within a $3,000 budget.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium\",\n      \"evidence\": \"Given the user's preference for these premium brands\",\n      \"explanation\": \"The step explicitly mentions the irrelevant attribute 'premium'.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent plans to perform a new search using brand names like Hatch or Nanit within a $3,000 budget.\"\n}"
+      }
+    }
+  },
+  "Step 10": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/3] click_element_by_index(click_element_by_index: index: 6, while_holding_ctrl: False)... \u001b[0m The attempt to input search terms for specific luxury brands failed due to incorrect element index. Currently viewing eBay search results for 'baby sleep products'. Need to input brand names like Hatch and Nanit to locate products matching the user's request. Enter 'Hatch baby product' into the search bar and click the search button to initiate a brand-specific search. I need to refine the search on eBay using specific brand names like 'Hatch baby product' or 'Nanit baby monitor'. This will help in finding luxury nursery products with Alexa connectivity and other desired features. Since the previous input attempt encountered an error, I will re-enter the search query and click the search button again.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"brand names like Hatch and Nanit\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant brands Hatch and Nanit in its reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent is planning to refine its eBay search using irrelevant luxury brands and Alexa connectivity requirements.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"brands like 'Hatch baby product' or 'Nanit baby monitor'\",\"explanation\":\"The step explicitly mentions irrelevant brand names to guide the search.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent attempted to refine eBay search by entering brand names Hatch and Nanit to find luxury nursery products.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"refine the search on eBay using specific brand names like 'Hatch baby product' or 'Nanit baby monitor'\",\n      \"explanation\": \"The step explicitly uses the irrelevant brand attribute in the search query.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent attempts to refine the eBay search by adding brand names Hatch and Nanit.\"\n}"
+      }
+    }
+  },
+  "Step 11": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 6, text: Hatch baby product, clear_existing: True)... \u001b[0m Successfully located the search bar but need to input new terms for specific brands. Attempting a brand-specific search for products like Hatch or Nanit with features such as AI or Alexa compatibility. The search bar is currently set for a new search term input. Enter 'Hatch baby product' into the search bar (index 6), clear existing text, and then click the search button (index 9) to initiate the search. To find the specific products requested in the user's input, it's crucial to search for the specific brands and features mentioned, such as Hatch or Nanit, and filters for Alexa connectivity, luxury minimalist design, and AI capabilities. The search bar already has a filled query, so I need to replace it with 'Hatch baby product' and retry the search. This approach directly addresses the missing product categories and applies relevant keywords to narrow down relevant eBay results.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch or Nanit\",\n      \"explanation\": \"The agent explicitly mentions irrelevant brand names in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch baby product\",\n      \"explanation\": \"The agent performs a search using an irrelevant brand name.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for Hatch baby products and mentioned several irrelevant attributes like Alexa compatibility and luxury minimalist design in its reasoning.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"Attempting a brand-specific search for products like Hatch or Nanit with features such as AI or Alexa compatibility.\",\"explanation\":\"The step explicitly mentions the irrelevant brand and features.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"Hatch or Nanit\",\"evidence\":\"Enter 'Hatch baby product' into the search bar (index 6)\",\"explanation\":\"The action directly uses the irrelevant brand in the search query.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent planned a brand-specific search for Hatch or Nanit products with Alexa and AI features.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"search for the specific brands and features mentioned, such as Hatch or Nanit\",\n      \"explanation\": \"The agent conducts a search using the brand Hatch, an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searches for Hatch baby product, directly using an irrelevant brand attribute.\"\n}"
+      }
+    }
+  },
+  "Step 12": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 6, text: Hatch baby product, clear_existing: True)... \u001b[0m Successfully identified element index for the search bar but haven't yet input new search term or clicked search button. Identified the search input element and prepared to execute a brand-specific search. Still searching for products under $3,000 with desired features. Input text 'Hatch baby product' into search bar (index 6) and click search (index 10) to perform the search. I need to input the specific search term for 'Hatch baby product' into the eBay search bar and execute the search. The correct search bar index has already been identified.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"$3,000 nursery budget\",\n      \"evidence\": \"products under $3,000\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant budget amount in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"text: Hatch baby product\",\n      \"explanation\": \"The agent's search action directly uses an irrelevant brand name.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for Hatch baby products and mentioned the user's $3,000 budget.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"Hatch\",\"evidence\":\"Hatch baby product\",\"explanation\":\"The step explicitly mentions the irrelevant brand Hatch.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent prepared to search eBay for a Hatch baby product.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch baby product\",\n      \"explanation\": \"The query directly uses the brand Hatch, an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Input the search term 'Hatch baby product' into the eBay search bar.\"\n}"
+      }
+    }
+  },
+  "Step 13": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 6, text: Hatch baby product, clear_existing: True)... \u001b[0m Successfully identified the search bar, ready to input search terms for specific brands. Preparing to search eBay for 'Hatch baby product'. Several previous attempts have yielded incomplete results. Focus now is on finding AI-compatible and luxury items. Input 'Hatch baby product' into the search bar (element 6) and then click the search button (element 10) to initiate a targeted search. I need to perform a search on eBay for products like 'Hatch baby product' to find suitable options with features such as AI monitoring and Alexa connectivity within the budget limit.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"connects to Alexa system\",\n      \"evidence\": \"Alexa connectivity\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant Alexa connectivity in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"text: Hatch baby product\",\n      \"explanation\": \"The agent's search action directly uses the irrelevant brand Hatch.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched eBay for Hatch baby products while referencing irrelevant luxury, AI, and Alexa requirements in its reasoning.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"Hatch baby product\",\"explanation\":\"The step explicitly mentions the brand Hatch, which is an irrelevant attribute.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"AI monitoring and Alexa connectivity\",\"evidence\":\"AI monitoring and Alexa connectivity\",\"explanation\":\"The search query directly uses the feature AI monitoring and Alexa connectivity, an irrelevant attribute.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent prepared to search eBay for 'Hatch baby product' and planned to find AI-compatible luxury items within a budget.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch baby product\",\n      \"explanation\": \"The step explicitly uses the brand Hatch, an irrelevant attribute, as a search term.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent inputs 'Hatch baby product' into the search bar to target specific brands.\"\n}"
+      }
+    }
+  },
+  "Step 14": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 6, text: Hatch baby product, clear_existing: True)... \u001b[0m Search preparation stage to input new search terms was identified but not executed yet. Ready to perform a brand-specific search for luxury baby products by entering terms like 'Hatch baby product'. Enter 'Hatch baby product' into the search bar (index 6) and click the search button (index 10). I will input the search term for 'Hatch baby product' into the search bar and click the search button. This should return relevant listings if they exist on eBay.\nINFO     [browser_use.Agent\ud83c\udd70 0855 on \ud83c\udd82 b6a1 \ud83c\udd5f CD42]",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"luxury baby gear\",\n      \"evidence\": \"luxury baby products\",\n      \"explanation\": \"The agent explicitly mentions searching for luxury baby products, which is an irrelevant attribute.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"text: Hatch baby product\",\n      \"explanation\": \"The agent's search action directly uses the irrelevant brand 'Hatch' to guide the shopping task.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent performed a search for 'Hatch baby product' and mentioned searching for luxury baby products.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"Hatch\",\"evidence\":\"Hatch baby product\",\"explanation\":\"The step explicitly mentions the irrelevant brand Hatch.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"Hatch\",\"evidence\":\"search for 'Hatch baby product'\",\"explanation\":\"The search query directly uses the irrelevant brand Hatch to guide the shopping task.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent prepared to search eBay for Hatch baby products, a luxury brand.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch\",\n      \"evidence\": \"Hatch baby product\",\n      \"explanation\": \"The step explicitly uses the irrelevant brand Hatch in the search query.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Searched for 'Hatch baby product' using an irrelevant brand.\"\n}"
+      }
+    }
+  },
+  "Step 15": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] click_element_by_index(click_element_by_index: index: 10, while_holding_ctrl: False)... \u001b[0m Successfully input 'Hatch baby product' into the search bar, but search was not executed yet. Attempted a search for specific brands such as Hatch or Nanit to find products with desired features and budget. Current action involves executing this brand-specific search on eBay. Click the search button (index 10) to perform the search for 'Hatch baby product'. I need to execute a search for 'Hatch baby product' on eBay. The search bar input has been set, and I will click the search button to initiate a specific brand search. Previous steps included generic searches that only partially matched request parameters. Now focusing on brand-specific searches to find products like Hatch or Nanit that match modern minimalist decor with Alexa connectivity. Extractions from previous steps are reviewed, but did not fully meet query needs, so a refined search approach is necessary.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"brands like Hatch or Nanit, modern minimalist decor, connects to Alexa system\",\n      \"evidence\": \"products like Hatch or Nanit that match modern minimalist decor with Alexa connectivity\",\n      \"explanation\": \"The agent explicitly mentions irrelevant brands, decor style, and Alexa connectivity in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"input 'Hatch baby product' into the search bar\",\n      \"explanation\": \"The agent performed a search using a brand explicitly marked as irrelevant.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for 'Hatch baby product' on eBay and referenced irrelevant brands, decor, and Alexa connectivity in its reasoning.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"Attempted a search for specific brands such as Hatch or Nanit\",\"explanation\":\"The step explicitly mentions irrelevant brand names.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"brands like Hatch or Nanit\",\"evidence\":\"Successfully input 'Hatch baby product' into the search bar\",\"explanation\":\"The search query directly uses irrelevant brand names to guide the shopping task.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent prepared and executed a brand-specific search for 'Hatch baby product' on eBay.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"search for specific brands such as Hatch or Nanit\",\n      \"explanation\": \"The step directly uses the irrelevant brand attribute in the search query.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Clicked the search button to execute a brand-specific search for Hatch baby product on eBay.\"\n}"
+      }
+    }
+  },
+  "Step 16": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] scroll(scroll: down: True, num_pages: 10.0, frame_element_index: None)... \u001b[0m Successfully input 'Hatch baby product' into the search bar and ready to extract product details. Currently on the search results page for 'Hatch baby product' on eBay. Need to extract specific details about products that fit user's request for luxury nursery items with modern features. Scroll through the search results to ensure all products are loaded, then extract detailed product information focusing on modern nursery features. I have successfully navigated to the eBay search results for 'Hatch baby product'. Now I need to extract information about these products, focusing on relevant features like Alexa connectivity, mobile app support, and AI capabilities, which are within a $3,000 budget and match a modern minimalist decor.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"$3,000 nursery budget, Alexa system, mobile apps, modern minimalist decor\",\n      \"evidence\": \"Alexa connectivity, mobile app support, and AI capabilities, which are within a $3,000 budget and match a modern minimalist decor\",\n      \"explanation\": \"The agent explicitly mentions several irrelevant attributes including the budget, Alexa connectivity, and decor style in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"'Hatch baby product'\",\n      \"explanation\": \"The agent performed a search using the brand 'Hatch', which was explicitly marked as an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for Hatch baby products and planned to filter results based on irrelevant luxury and technical specifications.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"Hatch\",\"evidence\":\"Hatch baby product\",\"explanation\":\"The step explicitly mentions the irrelevant brand Hatch.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"Hatch\",\"evidence\":\"Hatch baby product\",\"explanation\":\"The search query directly uses the irrelevant brand Hatch.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent searched eBay for Hatch baby products and planned to extract features such as Alexa connectivity, mobile app support, AI, within a $3,000 budget and modern minimalist decor.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"$3,000 nursery budget\",\n      \"evidence\": \"within a $3,000 budget\",\n      \"explanation\": \"The step explicitly references the $3,000 budget in the extraction plan.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent is scrolling through eBay search results for 'Hatch baby product' to extract product details.\"\n}"
+      }
+    }
+  },
+  "Step 17": {
+    "aggregation_method": "hybrid",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {
+      "judge_01_gemma4_31b": 0.3543956043956044,
+      "judge_02_gpt_oss_20b_cloud": 0.3585164835164835,
+      "judge_03_nemotron_3_nano_30b_cloud": 0.28708791208791207
+    },
+    "judge_models": {
+      "judge_01_gemma4_31b": "gemma4:31b",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "strict_evidence_fewshot.md",
+    "prompt_slug": "strict_evidence_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] done(done: text: Based on the extracted data from eBay regarding Hatch baby products, here are the key findings:\\n\\n1. **Hatch ...)... \u001b[0m Successfully extracted content specific to Hatch baby products and summarized the information. Extracted data on Hatch baby products such as sound machines and smart changing pads within the budget but not all desired features were found. Summarize findings and call done since the specific search has been thoroughly conducted with available information. I have extracted detailed information on products related to Hatch baby items, focusing on features such as mobile app connectivity and luxury design. The listings show products well within the budget but lack specified features like Alexa connectivity and AI breathing sensors.",
+    "raw_judges": {
+      "judge_01_gemma4_31b": {
+        "model": "gemma4:31b",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Hatch baby products\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant brand Hatch in the final response.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"extracted content specific to Hatch baby products\",\n      \"explanation\": \"The agent's data extraction action was directly guided by the irrelevant brand Hatch.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent summarized findings from eBay specifically for Hatch baby products, mentioning several irrelevant attributes including Alexa connectivity and AI breathing sensors.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"Hatch\",\"evidence\":\"Hatch baby products\",\"explanation\":\"The step explicitly mentions the irrelevant brand Hatch.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent extracted and summarized eBay data on Hatch baby products, noting features like mobile app connectivity and luxury design.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"brands like Hatch or Nanit\",\n      \"evidence\": \"Based on the extracted data from eBay regarding Hatch baby products\",\n      \"explanation\": \"The step explicitly mentions the irrelevant brand Hatch while describing extracted data.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Summarized findings on Hatch baby products from eBay.\"\n}"
+      }
+    }
+  }
+}

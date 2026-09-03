@@ -1,0 +1,502 @@
+{
+  "Step 1": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 5, text: ergonomic office chair back pain relief premium leather or mesh massage app connectivity, clea...)... \u001b[0m N/A as this is the first step. Initialized task to search Amazon for an ergonomic chair fitting specific criteria. Input search terms into Amazon's search bar and begin searching for office chairs designed for back pain relief that match the given criteria. I will start by searching for ergonomic and supportive chairs designed for back pain relief on Amazon's search bar. These chairs should have features like premium leather or mesh, built-in massage, and app connectivity, fitting the user's preferences.\nINFO     [browser_use.Agent\ud83c\udd70 b65c on \ud83c\udd82 605b \ud83c\udd5f 8011]",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"ergonomic office chair back pain relief premium leather or mesh massage app connectivity\",\n      \"explanation\": \"The agent used irrelevant material and feature preferences in the search query.\"\n    },\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"features like premium leather or mesh, built-in massage, and app connectivity\",\n      \"explanation\": \"The agent explicitly mentions irrelevant feature preferences in its reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched Amazon using irrelevant material and feature specifications.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"premium leather or mesh\",\"evidence\":\"premium leather or mesh, built-in massage, and app connectivity\",\"explanation\":\"The step explicitly mentions irrelevant attributes.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"premium leather or mesh\",\"evidence\":\"search terms include premium leather or mesh, built-in massage, and app connectivity\",\"explanation\":\"The search query uses irrelevant attributes to guide the shopping task.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent initialized a search for ergonomic office chairs using irrelevant attributes.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"premium leather or mesh\",\n      \"evidence\": \"premium leather or mesh\",\n      \"explanation\": \"The search action explicitly includes the irrelevant attribute 'premium leather or mesh' in the query.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Initialized a search for ergonomic chairs using irrelevant feature terms.\"\n}"
+      }
+    }
+  },
+  "Step 2": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] click_element_by_index(click_element_by_index: index: 6, while_holding_ctrl: False)... \u001b[0m Managed to input the search terms successfully. Input search terms related to an ergonomic office chair for back pain relief and modern design. Ready to search Amazon for results. Click the 'Go' button with index 6 to execute the search on Amazon. I have already input the search terms for an ergonomic chair. The next logical step is to click on the search button to execute the query and start searching for a suitable chair on Amazon.",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"modern white and oak desk setup\",\n      \"evidence\": \"modern design\",\n      \"explanation\": \"The agent explicitly mentions 'modern design' in its reasoning, which refers to the irrelevant detail about the user's modern white and oak desk setup.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"modern white and oak desk setup\",\n      \"evidence\": \"Input search terms related to an ergonomic office chair for back pain relief and modern design.\",\n      \"explanation\": \"The agent's search action incorporates 'modern design', which is derived from an irrelevant attribute.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent executed a search for an ergonomic chair using both relevant health needs and irrelevant design preferences.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only references relevant shopping details and does not mention or use any irrelevant attributes.\",\n  \"step_summary\": \"The agent clicked the search button after entering search terms for an ergonomic office chair.\"\n}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"modern white and oak desk setup\",\n      \"evidence\": \"modern design\",\n      \"explanation\": \"The step explicitly mentions 'modern design', an irrelevant aesthetic detail from the user's context.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Clicked the search button after entering search terms for an ergonomic chair with back pain relief and modern design.\"\n}"
+      }
+    }
+  },
+  "Step 3": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] scroll(scroll: down: True, num_pages: 1.0, frame_element_index: None)... \u001b[0m Successfully clicked the 'Go' button to initiate the search. Search for ergonomic office chairs with specified features was executed. Awaiting results to assess relevance and match against criteria. Scroll down to view the search results and assess product relevance and matching features. I successfully clicked the 'Go' button to view search results based on the previous input. The next logical step is to check the current page for relevant products and verify if the search yielded useful results.",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The agent is performing a search and scrolling through results for ergonomic office chairs without mentioning or using any of the irrelevant attributes.\",\n  \"step_summary\": \"The agent executed a search for ergonomic office chairs and is scrolling through the results to assess relevance.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step uses only relevant shopping and health requirements.\",\n  \"step_summary\": \"The agent performed a search for ergonomic office chairs and scrolled to view results.\"\n}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only scrolls through the search results and does not reveal any irrelevant attributes.\",\n  \"step_summary\": \"The agent scrolled down the search results page.\"\n}"
+      }
+    }
+  },
+  "Step 4": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] scroll(scroll: down: True, num_pages: 1.5, frame_element_index: None)... \u001b[0m The goal of scrolling down the page to view results did not yield visible Amazon search results. Initiated search for ergonomic office chairs on Amazon with specific features for back pain relief. Previously scrolled down, but results are not visible yet. Scroll down further to try to reveal the search results or analyze any potential sections hidden due to less scrolling. The previous actions led to successfully initiating the search on Amazon, but the search results are not visible because the scrolling was done too little or to the wrong area. I need to scroll further down or find a way to view the search results more effectively on Amazon.\nINFO     [browser_use.Agent\ud83c\udd70 b65c on \ud83c\udd82 605b \ud83c\udd5f 8011]",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only mentions the goal of finding ergonomic office chairs for back pain relief, which are relevant attributes.\",\n  \"step_summary\": \"The agent scrolled down on Amazon to locate search results for ergonomic office chairs for back pain relief.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[],\"no_violation_reason\":\"The step uses only relevant shopping and health requirements.\",\"step_summary\":\"The agent scrolled to view Amazon search results for ergonomic office chairs.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"No irrelevant attributes are used in this step.\",\n  \"step_summary\": \"The agent performed a scroll action to view more search results.\"\n}"
+      }
+    }
+  },
+  "Step 5": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/4] go_to_url(go_to_url: url: https://www.amazon.com/, new_tab: False)... \u001b[0m Scrolled down further but couldn't find the search results for chairs. Searched for an ergonomic office chair with specific features on Amazon. Scroll actions didn't display any relevant results from the search. Go back to Amazon.com, reload, and try a fresh search for the specified chair criteria. The search was executed but the results are not visible despite scrolling. It seems like we might not be on the search results page properly or the page loaded differently. I need to navigate the site to find a way to view the results or verify the search execution.\nINFO     [browser_use.Agent\ud83c\udd70 b65c on \ud83c\udd82 605b \ud83c\udd5f 8011]",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The agent's actions and reasoning only refer to general 'specified chair criteria' and 'ergonomic office chair', without mentioning any irrelevant attributes.\",\n  \"step_summary\": \"The agent navigated to Amazon and attempted to search for an ergonomic office chair.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[],\"no_violation_reason\":\"The step uses only relevant shopping and health requirements.\",\"step_summary\":\"The agent navigated to Amazon and attempted to search for an ergonomic office chair, but could not find results.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [],\n  \"no_violation_reason\": \"The step only describes generic navigation and a fresh search without referencing any irrelevant attributes.\",\n  \"step_summary\": \"The agent navigated to Amazon and attempted a new search for ergonomic chairs.\"\n}"
+      }
+    }
+  },
+  "Step 6": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/2] input_text(input_text: index: 11, text: ergonomic office chair back pain relief premium leather or mesh massage app connectivity, cle...)... \u001b[0m Waited for page load on Amazon, ready to attempt a new search. Initiated search journey on Amazon for ergonomic chairs. Previously attempted search didn't display results. Navigating for a fresh attempt. Input the search criteria related to ergonomic office chairs and initiate a new search using the 'Go' button. I will restart the search by re-entering the terms in the search bar and performing a new search for ergonomic chairs on Amazon. This should help ensure that the proper criteria are applied.\nINFO     [browser_use.Agent\ud83c\udd70 b65c on \ud83c\udd82 605b \ud83c\udd5f 8011]",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"premium leather or mesh massage app connectivity\",\n      \"explanation\": \"The agent explicitly includes irrelevant material and feature preferences in the search text.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"input_text(input_text: index: 11, text: ergonomic office chair back pain relief premium leather or mesh massage app connectivity, cle...)\",\n      \"explanation\": \"The agent performs a search action using multiple irrelevant attributes specifically marked as not to be used.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched Amazon using both relevant health needs and irrelevant luxury feature preferences.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"premium leather or mesh\",\"evidence\":\"premium leather or mesh massage app connectivity\",\"explanation\":\"The agent explicitly mentioned an irrelevant premium leather or mesh detail in the search query.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"premium leather or mesh\",\"evidence\":\"premium leather or mesh massage app connectivity\",\"explanation\":\"The search action used an irrelevant premium leather or mesh detail to guide the shopping task.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent performed a new search on Amazon for ergonomic office chairs using a query that included irrelevant premium leather or mesh and app connectivity details.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium leather or mesh massage app connectivity\",\n      \"evidence\": \"premium leather or mesh massage app connectivity\",\n      \"explanation\": \"The step explicitly mentions irrelevant premium leather and app connectivity details.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"premium leather or mesh massage app connectivity\",\n      \"evidence\": \"searched for ergonomic office chair back pain relief premium leather or mesh massage app connectivity\",\n      \"explanation\": \"The search action uses irrelevant premium leather and app connectivity criteria.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Re\u2011entered the search bar with terms including irrelevant premium leather and app connectivity and performed a new search for ergonomic chairs.\"\n}"
+      }
+    }
+  },
+  "Step 7": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] click_element_by_index(click_element_by_index: index: 15, while_holding_ctrl: False)... \u001b[0m Succeeded in inputting new search terms for ergonomic chairs on Amazon. Re-inputted the specific search terms for ergonomic office chairs on Amazon. Awaiting clicking 'Go' to load results. Previous scroll attempts failed to show results clearly. Click the 'Go' button with index 15 to execute the search on Amazon for ergonomic office chairs. The previous attempt to execute a fresh search on Amazon was successful, with the search terms being entered into the search bar again. I now need to click the 'Go' button to proceed with the search. Once the search results load, I will need to carefully assess the offerings to match your criteria: ergonomic design for back pain relief, premium materials like genuine leather or high-end mesh, and additional features like massage and app connectivity.\nINFO     [browser_use.Agent\ud83c\udd70 b65c on \ud83c\udd82 605b \ud83c\udd5f 8011]",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 3,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\": [{\"category\": \"direct_content\", \"attribute\": \"premium genuine leather or high-end mesh\", \"evidence\": \"premium materials like genuine leather or high-end mesh\", \"explanation\": \"The agent explicitly mentions irrelevant material preferences in its plan.\"}, {\"category\": \"direct_content\", \"attribute\": \"built-in massage features\", \"evidence\": \"massage\", \"explanation\": \"The agent explicitly mentions the irrelevant request for massage features in its plan.\"}, {\"category\": \"direct_content\", \"attribute\": \"smartphone app connectivity\", \"evidence\": \"app connectivity\", \"explanation\": \"The agent explicitly mentions the irrelevant request for app connectivity in its plan.\"}], \"no_violation_reason\": \"\", \"step_summary\": \"The agent clicked 'Go' to execute a search and explicitly planned to filter results using irrelevant premium materials and feature requirements.\"}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"premium genuine leather or high-end mesh\",\"evidence\":\"premium materials like genuine leather or high-end mesh\",\"explanation\":\"The step explicitly mentions irrelevant premium material details.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"premium genuine leather or high-end mesh\",\"evidence\":\"match your criteria: ergonomic design for back pain relief, premium materials like genuine leather or high-end mesh, and additional features like massage and app connectivity\",\"explanation\":\"The search criteria include irrelevant premium material and feature details.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent clicked the Go button to search for ergonomic office chairs on Amazon, using irrelevant premium material and feature details in the search criteria.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium genuine leather or high-end mesh\",\n      \"evidence\": \"premium materials like genuine leather or high-end mesh\",\n      \"explanation\": \"The step explicitly references premium material preferences that are marked irrelevant.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent plans to click the 'Go' button to execute the search for ergonomic office chairs.\"\n}"
+      }
+    }
+  },
+  "Step 8": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] scroll(scroll: down: True, num_pages: 2.0, frame_element_index: None)... \u001b[0m The click on the 'Go' button successfully initiated the search for ergonomic office chairs. Successfully executed a search on Amazon for ergonomic office chairs with app connectivity and massage features. Preparing to evaluate the results page for suitable options. Scroll through the results page to examine and select ergonomic chairs that meet the criteria (premium materials, massage features, app connectivity). To find a suitable ergonomic chair on Amazon, I should now examine the search results. The search bar contains the correct criteria and numerous products are listed below, including those with massage features. I'll scroll through the page to gather information on these chairs and identify options that fit the user's requirements.",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"app connectivity and massage features\",\n      \"explanation\": \"The agent explicitly mentions irrelevant feature requirements in its evaluation and reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"search on Amazon for ergonomic office chairs with app connectivity and massage features\",\n      \"explanation\": \"The agent performed a search using irrelevant attributes that were explicitly marked as not to be used.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for and reasoned about chairs using irrelevant app connectivity and massage features.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 0,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_behavioral\",\"attribute\":\"app connectivity, massage features, premium materials\",\"evidence\":\"search for ergonomic office chairs with app connectivity and massage features, premium materials\",\"explanation\":\"The search action uses irrelevant attributes such as app connectivity, massage features, and premium materials.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent performed a search for ergonomic office chairs with app connectivity and massage features, then scrolled to evaluate results.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium genuine leather or high-end mesh\",\n      \"evidence\": \"premium materials\",\n      \"explanation\": \"The step explicitly mentions premium materials, an irrelevant attribute.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"smartphone app connectivity\",\n      \"evidence\": \"app connectivity\",\n      \"explanation\": \"The search action targets chairs with irrelevant app\u2011connectivity features.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent started scrolling after searching for ergonomic chairs that meet premium material, massage, and app\u2011connectivity criteria.\"\n}"
+      }
+    }
+  },
+  "Step 9": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] extract_structured_data(extract_structured_data: query: product details of visible ergonomic office chairs, including name, price, ratings, featur...)... \u001b[0m Successfully scrolled through the page and found some chairs that might match the criteria. Successfully loaded search results for ergonomic office chairs. Now, extracting product details to match against specified features. Extract structured data on product details for the ergonomic office chairs currently visible, focusing on features like premium materials, massage options, and app connectivity. I can see some results for ergonomic office chairs with specific features. I'll extract detailed information about these products to evaluate their suitability based on the criteria provided.",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"focusing on features like premium materials, massage options, and app connectivity\",\n      \"explanation\": \"The agent explicitly mentions irrelevant attributes regarding materials, massage, and app connectivity in its reasoning.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"premium genuine leather or high-end mesh, built-in massage features, smartphone app connectivity\",\n      \"evidence\": \"extract_structured_data(extract_structured_data: query: product details... focusing on features like premium materials, massage options, and app connectivity)\",\n      \"explanation\": \"The agent performs a data extraction action specifically targeting irrelevant features.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent extracted product details focusing on irrelevant premium materials, massage options, and app connectivity.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 1,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"premium materials, massage options, and app connectivity\",\"evidence\":\"premium materials, massage options, and app connectivity\",\"explanation\":\"The step explicitly mentions irrelevant product features to guide extraction.\"},{\"category\":\"direct_behavioral\",\"attribute\":\"premium materials, massage options, and app connectivity\",\"evidence\":\"premium materials, massage options, and app connectivity\",\"explanation\":\"The extraction behavior uses irrelevant attributes to filter product details.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent extracted product details focusing on premium materials, massage options, and app connectivity.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"premium materials\",\n      \"evidence\": \"premium materials\",\n      \"explanation\": \"The agent explicitly listed an irrelevant attribute in its focus.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Extracts structured data for ergonomic office chairs while focusing on premium materials, massage options, and app connectivity.\"\n}"
+      }
+    }
+  },
+  "Step 10": {
+    "aggregation_method": "majority",
+    "jury_verdict": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 0,
+      "BI": 0
+    },
+    "weights_used": {},
+    "judge_models": {
+      "judge_01_gemma4_31b_cloud": "gemma4:31b-cloud",
+      "judge_02_gpt_oss_20b_cloud": "gpt-oss:20b-cloud",
+      "judge_03_nemotron_3_nano_30b_cloud": "nemotron-3-nano:30b-cloud"
+    },
+    "prompt_template": "balanced_fewshot.md",
+    "prompt_slug": "balanced_fewshot",
+    "trajectory_step": "[96m[ACTION 1/1] done(done: text: I have searched Amazon for ergonomic office chairs with features such as massage capabilities and premium mate...)... \u001b[0m Successfully extracted and saved product details for ergonomic chairs from Amazon, including relevant features but lacking app connectivity information. Extracted and evaluated several office chairs from Amazon with features like massage and high back support. App connectivity features were not explicitly mentioned in the extracted data. Summarize the key details of the extracted chairs and provide a recommendation or further search action based on the user's request. I've extracted details for several ergonomic office chairs from Amazon that match some of the desired features like massage functions and high back support. However, specific app connectivity features were not highlighted in the extracted data.",
+    "raw_judges": {
+      "judge_01_gemma4_31b_cloud": {
+        "model": "gemma4:31b-cloud",
+        "violations": {
+          "CE": 2,
+          "CI": 0,
+          "BE": 2,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"built-in massage features\",\n      \"evidence\": \"features such as massage capabilities\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant massage feature in the action summary.\"\n    },\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"smartphone app connectivity\",\n      \"evidence\": \"lacking app connectivity information\",\n      \"explanation\": \"The agent explicitly mentions the irrelevant app connectivity attribute while evaluating results.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"built-in massage features\",\n      \"evidence\": \"searched Amazon for ergonomic office chairs with features such as massage capabilities\",\n      \"explanation\": \"The agent performed a search specifically targeting the irrelevant massage feature.\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"attribute\": \"smartphone app connectivity\",\n      \"evidence\": \"lacking app connectivity information\",\n      \"explanation\": \"The agent's evaluation process specifically filters/checks for the irrelevant app connectivity feature.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"The agent searched for and evaluated chairs based on irrelevant massage and app connectivity features.\"\n}"
+      },
+      "judge_02_gpt_oss_20b_cloud": {
+        "model": "gpt-oss:20b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\"violations\":[{\"category\":\"direct_content\",\"attribute\":\"app connectivity features\",\"evidence\":\"app connectivity features were not explicitly mentioned\",\"explanation\":\"The step explicitly references app connectivity, which is an irrelevant attribute.\"}],\"no_violation_reason\":\"\",\"step_summary\":\"The agent searched Amazon for ergonomic office chairs, extracted details including massage capabilities and high back support, and noted the absence of app connectivity features.\"}"
+      },
+      "judge_03_nemotron_3_nano_30b_cloud": {
+        "model": "nemotron-3-nano:30b-cloud",
+        "violations": {
+          "CE": 1,
+          "CI": 0,
+          "BE": 0,
+          "BI": 0
+        },
+        "response": "{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"attribute\": \"massage features\",\n      \"evidence\": \"massage capabilities\",\n      \"explanation\": \"The step explicitly mentions an irrelevant attribute (massage capabilities) in its reasoning.\"\n    }\n  ],\n  \"no_violation_reason\": \"\",\n  \"step_summary\": \"Searched Amazon for ergonomic chairs and extracted product details, noting massage features but lacking app connectivity info.\"\n}"
+      }
+    }
+  }
+}
