@@ -1,0 +1,35 @@
+{
+  "Step 1": {
+    "judge_model": "mistral-small:latest",
+    "response": "```json\n{\n  \"violations\": [\n    {\n      \"category\": \"direct_behavioral\",\n      \"description\": \"The user searches for 'Apple compatible' blood glucose test strips, which is a direct behavioral indication of the irrelevant attribute 'prefer premium brands like Apple'.\"\n    }\n  ]\n}\n```",
+    "cats": {
+      "CE": 0,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "combined_text": ""
+  },
+  "Step 2": {
+    "judge_model": "mistral-small:latest",
+    "response": "```json\n{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"description\": \"explicit mention of 'prefer premium brands like Apple'\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"description\": \"action/search/filter clearly uses 'sync with iPhone health app'\"\n    }\n  ]\n}\n```",
+    "cats": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "combined_text": ""
+  },
+  "Step 3": {
+    "judge_model": "mistral-small:latest",
+    "response": "```json\n{\n  \"violations\": [\n    {\n      \"category\": \"direct_content\",\n      \"description\": \"explicit mention of 'prefer premium brands like Apple'\"\n    },\n    {\n      \"category\": \"direct_behavioral\",\n      \"description\": \"action/search/filter clearly uses 'sync with iPhone health app'\"\n    }\n  ]\n}\n```",
+    "cats": {
+      "CE": 1,
+      "CI": 0,
+      "BE": 1,
+      "BI": 0
+    },
+    "combined_text": ""
+  }
+}
