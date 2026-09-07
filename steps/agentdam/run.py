@@ -18,7 +18,7 @@ from privacy_eval import PrivacyEvaluator  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dataset", type=Path, default=ROOT / "data" / "input" / "synthetic" / "spillage_eval_set_v2.jsonl")
+    parser.add_argument("--dataset", type=Path, default=ROOT / "data" / "input" / "synthetic" / "spillage_eval_set.jsonl")
     parser.add_argument("--output", type=Path, default=ROOT / "data" / "output" / "agentDAM" / "predictions.jsonl")
     parser.add_argument("--config", type=Path, default=AGENTDAM_DIR / "configs/p_cot_privacy_judge_ollama.json")
     parser.add_argument("--model", default=None)
