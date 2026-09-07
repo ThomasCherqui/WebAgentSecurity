@@ -49,6 +49,7 @@ def compact_step_result(position: int, source: dict[str, Any], result: dict[str,
     ]
     return {
         "step": position,
+        "prompt_slug": result.get("prompt_slug", ""),
         "timestamp": source.get("timestamp"),
         "source_model": source.get("model"),
         "message_id": source.get("message_id"),
@@ -62,9 +63,14 @@ def compact_step_result(position: int, source: dict[str, Any], result: dict[str,
 
 
 def run_per_step(events: list[dict[str, Any]], task_goal: str, mock: bool = False,
-                 conditioning: dict[str, Any] | None = None) -> dict[str, Any]:
+                 conditioning: dict[str, Any] | None = None,
+                 task_context: str = "") -> dict[str, Any]:
     models, chairman = configure_models()
     conditioning = conditioning or {}
+    normalized_task_goal = str(conditioning.get("normalized_task_goal") or task_goal)
+    full_user_prompt = "\n\n".join(
+        value.strip() for value in (task_goal, task_context) if value.strip()
+    )
     started = time.monotonic()
     step_results = []
     all_violations = []
@@ -72,10 +78,11 @@ def run_per_step(events: list[dict[str, Any]], task_goal: str, mock: bool = Fals
     def analyze_step(position: int, event: dict[str, Any]) -> dict[str, Any]:
         step_started = time.monotonic()
         result = analyze(
-            [event], task_goal, mock=mock,
+            [event], normalized_task_goal, mock=mock,
             relevant_attributes=attributes(conditioning, "relevant_information"),
             irrelevant_attributes=attributes(conditioning, "irrelevant_information"),
             ambiguous_attributes=attributes(conditioning, "ambiguous_information"),
+            full_user_prompt=full_user_prompt,
         )
         return compact_step_result(position, event, result, time.monotonic() - step_started)
 
@@ -108,6 +115,7 @@ def run_per_step(events: list[dict[str, Any]], task_goal: str, mock: bool = Fals
         "step_results": step_results,
         "task_conditioning": conditioning,
         "analysis_metadata": {
+            "candidate_prompt": "comparative_counterexamples_fewshot",
             "council_models": models,
             "chairman_model": chairman,
             "calls_per_step": 0 if mock else len(models) * 2 + 1,

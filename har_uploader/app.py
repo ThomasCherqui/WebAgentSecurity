@@ -79,7 +79,12 @@ async def analyze_har(request: AnalysisRequest) -> dict[str, Any]:
             host=os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434"),
         )
         return await asyncio.to_thread(
-            run_per_step, compact_events, request.task_goal, request.mock, conditioning
+            run_per_step,
+            compact_events,
+            request.task_goal,
+            request.mock,
+            conditioning,
+            request.task_context,
         )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
