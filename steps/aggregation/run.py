@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Offline aggregation for raw explainability judge outputs.
+"""Offline aggregation for raw per-judge outputs.
 
-This stage reads the raw per-judge outputs produced by
-jury_explainability_and_prompts and applies aggregation methods without
+This stage reads the raw per-judge outputs produced by ``generate_votes.py``
+and applies aggregation methods without
 calling any judge model again.
 """
 from __future__ import annotations
@@ -253,7 +253,7 @@ def aggregate_run(raw_run: Path, output_dir: Path, method: str) -> None:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Aggregate raw per-judge explainability outputs")
-    p.add_argument("--raw-run", required=True, help="Directory produced by jury_explainability_and_prompts")
+    p.add_argument("--raw-run", required=True, help="Directory produced by steps/aggregation/generate_votes.py")
     p.add_argument("--method", choices=["hybrid", "majority", "all", "weighted"], default="hybrid")
     p.add_argument("--output-dir", default=None, help="Exact output directory for a single method")
     p.add_argument("--output-root", default=str(SCRIPT_DIR.parent.parent / "data" / "output" / "aggregation"), help="Root used when --output-dir is omitted")

@@ -28,7 +28,7 @@ from schemas import slug
 
 DEFAULT_CANDIDATES = {
     "shopping_Amazon_chat": ["gemma4:31b-cloud", "gpt-oss:20b-cloud", "nemotron-3-nano:30b-cloud"],
-    "shopping_ebay_chat": ["gemma4:31b", "gpt-oss:20b", "nemotron-cascade-2:latest"],
+    "shopping_ebay_chat": ["gemma4:31b-cloud", "gpt-oss:20b-cloud", "nemotron-3-nano:30b-cloud"],
 }
 
 

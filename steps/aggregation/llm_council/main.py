@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tasks-dir", type=Path, default=TASKS_DIR)
     parser.add_argument("--output-root", type=Path, default=RESULTS_ROOT)
     parser.add_argument("--output-dir", type=Path, default=None)
-    parser.add_argument("--run-name", default=None, help="Readable output folder name under results_ollama/llm_council/<domain>/<prompt_slug>/")
+    parser.add_argument("--run-name", default=None, help="Readable folder name under the configured council output root")
     parser.add_argument("--limit-personas", type=int, default=0)
     parser.add_argument("--limit-steps", type=int, default=0)
     parser.add_argument("--ollama-host", default=None)

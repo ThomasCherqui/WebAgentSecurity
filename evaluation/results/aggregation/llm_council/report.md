@@ -2,15 +2,15 @@
 
 ## Matching
 
-Golden rows are built from `jury_verdict` in the existing-results JSON files.
+Reference rows are loaded from the configured reference-annotation source.
 Prediction rows are read from each `predictions.csv`.
 Rows are matched exactly on `(task, persona, step)` after these normalizations:
 
-- golden task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
+- legacy reference task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
 - persona names are trimmed and internal whitespace is collapsed;
 - step labels such as `Step 12` and `12` are both parsed to integer `12`.
 
-Golden root: `/home/zhonghao/Documents/Thomas/home/spillage_release/data/input/gold/gold.csv`
+Reference source: `data/input/gold/gold.csv`
 Prediction root: `data/output/aggregation/llm_council`
 Output directory: `evaluation/results/aggregation/llm_council`
 
@@ -26,10 +26,10 @@ Decision hint: prefer the top macro-F1 model if you want the best overall CE/BE/
 
 ## Macro Summary
 
-| task                 | model                                            | matched | gold | pred | gold_only | pred_only | acc    | prec   | recall | f1     | exact  |
-| -------------------- | ------------------------------------------------ | ------- | ---- | ---- | --------- | --------- | ------ | ------ | ------ | ------ | ------ |
-| shopping_Amazon_chat | comparative_counterexamples_fewshot/qwen_council | 467     | 467  | 467  | 0         | 0         |  94.4% |  77.9% |  82.3% |  79.3% |  80.7% |
-| shopping_ebay_chat   | comparative_counterexamples_fewshot/qwen_council | 547     | 547  | 547  | 0         | 0         |  95.3% |  76.9% |  97.8% |  84.8% |  82.3% |
+| task                 | model                                            | matched | reference | pred | reference_only | pred_only | acc    | prec   | recall | f1     | exact  |
+| -------------------- | ------------------------------------------------ | ------- | --------- | ---- | -------------- | --------- | ------ | ------ | ------ | ------ | ------ |
+| shopping_Amazon_chat | comparative_counterexamples_fewshot/qwen_council | 467     | 467       | 467  | 0              | 0         |  94.4% |  77.9% |  82.3% |  79.3% |  80.7% |
+| shopping_ebay_chat   | comparative_counterexamples_fewshot/qwen_council | 547     | 547       | 547  | 0              | 0         |  95.3% |  76.9% |  97.8% |  84.8% |  82.3% |
 
 ## Per Label
 

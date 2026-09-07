@@ -10,7 +10,7 @@ Task and trajectory datasets contain persona attributes and browser-like interac
 
 The HAR uploader parses HAR content locally and sends only selected, reconstructed events to the configured analysis service. Obtain appropriate consent before analysing real browsing data, minimise retained fields, and verify that HAR files do not contain authentication material.
 
-## Gold annotations and evaluation
+## Reference annotations and evaluation
 
 `data/input/gold/gold.csv` is a corrected reference set, not an objective or exhaustive definition of privacy harm. Implicit content (`CI`) and implicit behaviour (`BI`) have low support and involve interpretive judgement. Accuracy can therefore overstate performance; report per-label precision, recall, F1, coverage, and qualitative errors together.
 
@@ -19,4 +19,3 @@ LLM judges may be sensitive to prompt wording, model version, provider behaviour
 ## External components
 
 AgentDAM-derived code retains its original attribution and non-commercial licensing constraints. Users must review the terms of external models, providers, datasets, and agent frameworks before redistribution or commercial use.
-

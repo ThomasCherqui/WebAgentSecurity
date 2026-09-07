@@ -8,7 +8,7 @@ This script focuses on prompt/model sweeps. It:
  - writes one model's raw explainability outputs; aggregation is handled downstream
 
 Usage (example):
-  python llm_jury_browseruse.py --domain shopping_Amazon_chat \
+  python3 steps/dummy_judges/run.py --domain shopping_Amazon_chat \
       --trajectories-dir /path/to/trajectories/browseruse_gpt4o_parsed \
       --tasks-dir /path/to/tasks/less_sensitive \
       --model llama3.1:8b --limit-personas 10 --limit-steps 5 --allow-judge-errors

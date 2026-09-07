@@ -2,15 +2,15 @@
 
 ## Matching
 
-Golden rows are built from `jury_verdict` in the existing-results JSON files.
+Reference rows are loaded from the configured reference-annotation source.
 Prediction rows are read from each `predictions.csv`.
 Rows are matched exactly on `(task, persona, step)` after these normalizations:
 
-- golden task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
+- legacy reference task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
 - persona names are trimmed and internal whitespace is collapsed;
 - step labels such as `Step 12` and `12` are both parsed to integer `12`.
 
-Golden root: `/home/zhonghao/Documents/Thomas/home/spillage_release/data/input/gold/gold.csv`
+Reference source: `data/input/gold/gold.csv`
 Prediction root: `data/output/prompt_judges`
 Output directory: `evaluation/results/prompt_judges`
 
@@ -20,7 +20,7 @@ Primary ranking is weighted macro F1 across matched rows. Accuracy is shown, but
 
 | rank | model                                        | tasks | matched | coverage | f1     | recall | prec   | acc    | exact  |
 | ---- | -------------------------------------------- | ----- | ------- | -------- | ------ | ------ | ------ | ------ | ------ |
-| 1    | comparative_counterexamples_fewshot/gemma    | 2     | 1014    | 100.0%   |  70.9% |  84.0% |  62.6% |  93.5% |  77.6% |
+| 1    | comparative_counterexamples_fewshot/gemma    | 2     | 1014    | 100.0%   |  71.2% |  84.0% |  63.1% |  93.6% |  77.8% |
 | 2    | balanced_fewshot/gemma                       | 2     | 1014    | 100.0%   |  48.2% |  52.4% |  48.8% |  91.5% |  74.4% |
 | 3    | comparative_counterexamples_fewshot/gpt-oss  | 2     | 1014    | 100.0%   |  47.4% |  49.2% |  47.8% |  89.5% |  65.0% |
 | 4    | balanced_fewshot/gpt-oss                     | 2     | 1014    | 100.0%   |  47.2% |  49.5% |  53.7% |  91.1% |  71.0% |
@@ -34,26 +34,26 @@ Decision hint: prefer the top macro-F1 model if you want the best overall CE/BE/
 
 ## Macro Summary
 
-| task                 | model                                        | matched | gold | pred | gold_only | pred_only | acc    | prec   | recall | f1     | exact  |
-| -------------------- | -------------------------------------------- | ------- | ---- | ---- | --------- | --------- | ------ | ------ | ------ | ------ | ------ |
-| shopping_Amazon_chat | balanced_fewshot/gemma                       | 467     | 467  | 467  | 0         | 0         |  91.6% |  60.6% |  55.9% |  54.0% |  73.9% |
-| shopping_Amazon_chat | balanced_fewshot/gpt-oss                     | 467     | 467  | 467  | 0         | 0         |  90.4% |  66.1% |  48.0% |  48.4% |  68.3% |
-| shopping_Amazon_chat | balanced_fewshot/nemotron                    | 467     | 467  | 467  | 0         | 0         |  88.0% |  42.6% |  37.0% |  39.4% |  60.0% |
-| shopping_Amazon_chat | comparative_counterexamples_fewshot/gemma    | 467     | 467  | 467  | 0         | 0         |  92.9% |  60.6% |  79.1% |  68.1% |  76.0% |
-| shopping_Amazon_chat | comparative_counterexamples_fewshot/gpt-oss  | 467     | 467  | 467  | 0         | 0         |  88.4% |  46.2% |  42.5% |  44.2% |  61.0% |
-| shopping_Amazon_chat | comparative_counterexamples_fewshot/nemotron | 467     | 467  | 467  | 0         | 0         |  80.7% |  49.5% |  35.6% |  37.3% |  38.1% |
-| shopping_Amazon_chat | strict_evidence_fewshot/gemma                | 467     | 467  | 467  | 0         | 0         |  90.2% |  43.1% |  41.9% |  41.6% |  66.6% |
-| shopping_Amazon_chat | strict_evidence_fewshot/gpt-oss              | 467     | 467  | 467  | 0         | 0         |  88.2% |  42.9% |  38.6% |  39.5% |  59.1% |
-| shopping_Amazon_chat | strict_evidence_fewshot/nemotron             | 467     | 467  | 467  | 0         | 0         |  81.8% |  43.4% |  24.0% |  30.7% |  39.6% |
-| shopping_ebay_chat   | balanced_fewshot/gemma                       | 547     | 547  | 547  | 0         | 0         |  91.4% |  38.7% |  49.3% |  43.3% |  74.8% |
-| shopping_ebay_chat   | balanced_fewshot/gpt-oss                     | 547     | 547  | 547  | 0         | 0         |  91.6% |  43.1% |  50.7% |  46.3% |  73.3% |
-| shopping_ebay_chat   | balanced_fewshot/nemotron                    | 547     | 547  | 547  | 0         | 0         |  87.4% |  40.8% |  35.1% |  37.5% |  59.2% |
-| shopping_ebay_chat   | comparative_counterexamples_fewshot/gemma    | 547     | 547  | 547  | 0         | 0         |  94.1% |  64.3% |  88.1% |  73.3% |  79.0% |
-| shopping_ebay_chat   | comparative_counterexamples_fewshot/gpt-oss  | 547     | 547  | 547  | 0         | 0         |  90.5% |  49.1% |  55.0% |  50.0% |  68.4% |
-| shopping_ebay_chat   | comparative_counterexamples_fewshot/nemotron | 547     | 547  | 547  | 0         | 0         |  83.0% |  44.6% |  28.9% |  33.0% |  43.0% |
-| shopping_ebay_chat   | strict_evidence_fewshot/gemma                | 547     | 547  | 547  | 0         | 0         |  91.2% |  68.6% |  45.8% |  49.5% |  68.2% |
-| shopping_ebay_chat   | strict_evidence_fewshot/gpt-oss              | 547     | 547  | 547  | 0         | 0         |  90.2% |  49.4% |  43.9% |  45.4% |  65.8% |
-| shopping_ebay_chat   | strict_evidence_fewshot/nemotron             | 547     | 547  | 547  | 0         | 0         |  82.7% |  42.8% |  22.8% |  29.7% |  44.2% |
+| task                 | model                                        | matched | reference | pred | reference_only | pred_only | acc    | prec   | recall | f1     | exact  |
+| -------------------- | -------------------------------------------- | ------- | --------- | ---- | -------------- | --------- | ------ | ------ | ------ | ------ | ------ |
+| shopping_Amazon_chat | balanced_fewshot/gemma                       | 467     | 467       | 467  | 0              | 0         |  91.6% |  60.6% |  55.9% |  54.0% |  73.9% |
+| shopping_Amazon_chat | balanced_fewshot/gpt-oss                     | 467     | 467       | 467  | 0              | 0         |  90.4% |  66.1% |  48.0% |  48.4% |  68.3% |
+| shopping_Amazon_chat | balanced_fewshot/nemotron                    | 467     | 467       | 467  | 0              | 0         |  88.0% |  42.6% |  37.0% |  39.4% |  60.0% |
+| shopping_Amazon_chat | comparative_counterexamples_fewshot/gemma    | 467     | 467       | 467  | 0              | 0         |  93.0% |  61.6% |  79.2% |  68.7% |  76.4% |
+| shopping_Amazon_chat | comparative_counterexamples_fewshot/gpt-oss  | 467     | 467       | 467  | 0              | 0         |  88.4% |  46.2% |  42.5% |  44.2% |  61.0% |
+| shopping_Amazon_chat | comparative_counterexamples_fewshot/nemotron | 467     | 467       | 467  | 0              | 0         |  80.7% |  49.5% |  35.6% |  37.3% |  38.1% |
+| shopping_Amazon_chat | strict_evidence_fewshot/gemma                | 467     | 467       | 467  | 0              | 0         |  90.2% |  43.1% |  41.9% |  41.6% |  66.6% |
+| shopping_Amazon_chat | strict_evidence_fewshot/gpt-oss              | 467     | 467       | 467  | 0              | 0         |  88.2% |  42.9% |  38.6% |  39.5% |  59.1% |
+| shopping_Amazon_chat | strict_evidence_fewshot/nemotron             | 467     | 467       | 467  | 0              | 0         |  81.8% |  43.4% |  24.0% |  30.7% |  39.6% |
+| shopping_ebay_chat   | balanced_fewshot/gemma                       | 547     | 547       | 547  | 0              | 0         |  91.4% |  38.7% |  49.3% |  43.3% |  74.8% |
+| shopping_ebay_chat   | balanced_fewshot/gpt-oss                     | 547     | 547       | 547  | 0              | 0         |  91.6% |  43.1% |  50.7% |  46.3% |  73.3% |
+| shopping_ebay_chat   | balanced_fewshot/nemotron                    | 547     | 547       | 547  | 0              | 0         |  87.4% |  40.8% |  35.1% |  37.5% |  59.2% |
+| shopping_ebay_chat   | comparative_counterexamples_fewshot/gemma    | 547     | 547       | 547  | 0              | 0         |  94.1% |  64.3% |  88.1% |  73.3% |  79.0% |
+| shopping_ebay_chat   | comparative_counterexamples_fewshot/gpt-oss  | 547     | 547       | 547  | 0              | 0         |  90.5% |  49.1% |  55.0% |  50.0% |  68.4% |
+| shopping_ebay_chat   | comparative_counterexamples_fewshot/nemotron | 547     | 547       | 547  | 0              | 0         |  83.0% |  44.6% |  28.9% |  33.0% |  43.0% |
+| shopping_ebay_chat   | strict_evidence_fewshot/gemma                | 547     | 547       | 547  | 0              | 0         |  91.2% |  68.6% |  45.8% |  49.5% |  68.2% |
+| shopping_ebay_chat   | strict_evidence_fewshot/gpt-oss              | 547     | 547       | 547  | 0              | 0         |  90.2% |  49.4% |  43.9% |  45.4% |  65.8% |
+| shopping_ebay_chat   | strict_evidence_fewshot/nemotron             | 547     | 547       | 547  | 0              | 0         |  82.7% |  42.8% |  22.8% |  29.7% |  44.2% |
 
 ## Per Label
 
@@ -88,10 +88,10 @@ Decision hint: prefer the top macro-F1 model if you want the best overall CE/BE/
 
 | label | rows | support | pred_pos | tp  | fp | fn | acc    | prec   | recall | f1     |
 | ----- | ---- | ------- | -------- | --- | -- | -- | ------ | ------ | ------ | ------ |
-| CE    | 467  | 256     | 321      | 256 | 65 | 0  |  86.1% |  79.8% | 100.0% |  88.7% |
-| BE    | 467  | 262     | 283      | 249 | 34 | 13 |  89.9% |  88.0% |  95.0% |  91.4% |
+| CE    | 467  | 256     | 320      | 256 | 64 | 0  |  86.3% |  80.0% | 100.0% |  88.9% |
+| BE    | 467  | 262     | 284      | 250 | 34 | 12 |  90.1% |  88.0% |  95.4% |  91.6% |
 | CI    | 467  | 7       | 13       | 5   | 8  | 2  |  97.9% |  38.5% |  71.4% |  50.0% |
-| BI    | 467  | 8       | 11       | 4   | 7  | 4  |  97.6% |  36.4% |  50.0% |  42.1% |
+| BI    | 467  | 8       | 10       | 4   | 6  | 4  |  97.9% |  40.0% |  50.0% |  44.4% |
 
 ### shopping_Amazon_chat / comparative_counterexamples_fewshot/gpt-oss
 

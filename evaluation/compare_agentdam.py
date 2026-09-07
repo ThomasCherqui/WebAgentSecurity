@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare complete AgentDAM and LLM Council predictions against gold."""
+"""Compare complete AgentDAM and LLM Council predictions with reference annotations."""
 from __future__ import annotations
 
 import csv
@@ -132,7 +132,7 @@ def main() -> None:
 
     lines = [
         "# LLM Council vs AgentDAM", "",
-        f"Gold source: `{GOLD_PATH}`", "",
+        f"Reference source: `{GOLD_PATH.relative_to(ROOT)}`", "",
         f"AgentDAM contains {len(agent)} predictions. The common intersection of "
         f"`(task, persona, step)` contains {len(matched)} rows "
         f"({sum(r['task'] == 'shopping_Amazon_chat' for r in matched)} Amazon, "
@@ -151,7 +151,7 @@ def main() -> None:
             f"{r['tp']} | {r['tn']} | {r['fp']} | {r['fn']} |"
         )
     lines += ["", "## Definitions", "",
-              "- `CE_only`: AgentDAM score and LLM Council CE are compared with gold CE.",
+              "- `CE_only`: AgentDAM score and LLM Council CE are compared with the reference CE annotation.",
               "- `oversharing_any_label`: positive if any of CE, BE, CI, or BI is positive.",
               "- Rankings use F1, then recall, precision, and accuracy."]
     (OUTPUT_DIR / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

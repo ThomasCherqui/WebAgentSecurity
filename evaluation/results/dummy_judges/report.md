@@ -2,15 +2,15 @@
 
 ## Matching
 
-Golden rows are built from `jury_verdict` in the existing-results JSON files.
+Reference rows are loaded from the configured reference-annotation source.
 Prediction rows are read from each `predictions.csv`.
 Rows are matched exactly on `(task, persona, step)` after these normalizations:
 
-- golden task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
+- legacy reference task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;
 - persona names are trimmed and internal whitespace is collapsed;
 - step labels such as `Step 12` and `12` are both parsed to integer `12`.
 
-Golden root: `/home/zhonghao/Documents/Thomas/home/spillage_release/data/input/gold/gold.csv`
+Reference source: `data/input/gold/gold.csv`
 Prediction root: `data/output/dummy_judges`
 Output directory: `evaluation/results/dummy_judges`
 
@@ -30,18 +30,18 @@ Decision hint: prefer the top macro-F1 model if you want the best overall CE/BE/
 
 ## Macro Summary
 
-| task                 | model    | matched | gold | pred | gold_only | pred_only | acc    | prec   | recall | f1     | exact  |
-| -------------------- | -------- | ------- | ---- | ---- | --------- | --------- | ------ | ------ | ------ | ------ | ------ |
-| shopping_Amazon_chat | gemma    | 467     | 467  | 467  | 0         | 0         |  90.4% |  40.1% |  48.6% |  43.9% |  71.1% |
-| shopping_Amazon_chat | gpt-oss  | 467     | 467  | 467  | 0         | 0         |  88.0% |  54.4% |  48.3% |  47.7% |  65.5% |
-| shopping_Amazon_chat | mistral  | 467     | 467  | 467  | 0         | 0         |  82.7% |  36.3% |  42.1% |  38.1% |  45.4% |
-| shopping_Amazon_chat | nemotron | 467     | 467  | 467  | 0         | 0         |  87.3% |  42.5% |  55.3% |  44.9% |  64.9% |
-| shopping_Amazon_chat | qwen     | 467     | 467  | 467  | 0         | 0         |  90.0% |  42.4% |  42.3% |  41.7% |  67.0% |
-| shopping_ebay_chat   | gemma    | 547     | 547  | 547  | 0         | 0         |  92.0% |  44.0% |  57.6% |  48.8% |  74.4% |
-| shopping_ebay_chat   | gpt-oss  | 547     | 547  | 547  | 0         | 0         |  90.0% |  42.7% |  53.6% |  45.2% |  70.2% |
-| shopping_ebay_chat   | mistral  | 547     | 547  | 547  | 0         | 0         |  77.4% |  31.5% |  36.2% |  31.8% |  31.3% |
-| shopping_ebay_chat   | nemotron | 547     | 547  | 547  | 0         | 0         |  89.3% |  41.8% |  55.2% |  44.7% |  69.8% |
-| shopping_ebay_chat   | qwen     | 547     | 547  | 547  | 0         | 0         |  91.9% |  43.3% |  42.7% |  42.5% |  71.5% |
+| task                 | model    | matched | reference | pred | reference_only | pred_only | acc    | prec   | recall | f1     | exact  |
+| -------------------- | -------- | ------- | --------- | ---- | -------------- | --------- | ------ | ------ | ------ | ------ | ------ |
+| shopping_Amazon_chat | gemma    | 467     | 467       | 467  | 0              | 0         |  90.4% |  40.1% |  48.6% |  43.9% |  71.1% |
+| shopping_Amazon_chat | gpt-oss  | 467     | 467       | 467  | 0              | 0         |  88.0% |  54.4% |  48.3% |  47.7% |  65.5% |
+| shopping_Amazon_chat | mistral  | 467     | 467       | 467  | 0              | 0         |  82.7% |  36.3% |  42.1% |  38.1% |  45.4% |
+| shopping_Amazon_chat | nemotron | 467     | 467       | 467  | 0              | 0         |  87.3% |  42.5% |  55.3% |  44.9% |  64.9% |
+| shopping_Amazon_chat | qwen     | 467     | 467       | 467  | 0              | 0         |  90.0% |  42.4% |  42.3% |  41.7% |  67.0% |
+| shopping_ebay_chat   | gemma    | 547     | 547       | 547  | 0              | 0         |  92.0% |  44.0% |  57.6% |  48.8% |  74.4% |
+| shopping_ebay_chat   | gpt-oss  | 547     | 547       | 547  | 0              | 0         |  90.0% |  42.7% |  53.6% |  45.2% |  70.2% |
+| shopping_ebay_chat   | mistral  | 547     | 547       | 547  | 0              | 0         |  77.4% |  31.5% |  36.2% |  31.8% |  31.3% |
+| shopping_ebay_chat   | nemotron | 547     | 547       | 547  | 0              | 0         |  89.3% |  41.8% |  55.2% |  44.7% |  69.8% |
+| shopping_ebay_chat   | qwen     | 547     | 547       | 547  | 0              | 0         |  91.9% |  43.3% |  42.7% |  42.5% |  71.5% |
 
 ## Per Label
 

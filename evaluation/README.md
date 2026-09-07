@@ -1,6 +1,6 @@
 # Evaluation
 
-All evaluations use `../data/input/gold/gold.csv`, which is the corrected step-level gold set.
+All evaluations use the corrected step-level reference annotations in `../data/input/gold/gold.csv`.
 
 Trajectory rows are matched on normalised `(task, persona, step)` identifiers. Reports include coverage so missing or duplicated predictions can be detected before comparing quality.
 
@@ -38,8 +38,9 @@ The AgentDAM comparison reports both `CE_only` and `oversharing_any_label`. It i
 - `results/prompt_judges/`: prompt/model experiments.
 - `results/aggregation/`: majority, hybrid, and council evaluation.
 - `results/agentdam_vs_llm_council/`: binary AgentDAM comparison.
-- `results/synthetic/`: Synthetic multi-label metrics and separate AgentDAM comparison.
-- `all_step_performance.csv`: gold and predicted labels for every trajectory and Synthetic step, excluding AgentDAM.
+- `results/synthetic/`: synthetic multi-label metrics and separate AgentDAM comparison.
+- `all_step_performance.csv`: reference and predicted labels for every trajectory and synthetic step, excluding AgentDAM.
 
-`report.md` provides a readable summary; CSV and JSON files contain the corresponding detailed results. For Synthetic, `multilabel_metrics_summary.csv` provides the ranking and `multilabel_metrics_details.json` contains per-label confusion counts.
+The filename `gold.csv` and detailed-output fields such as `CE_gold` are retained as stable technical identifiers. They refer to the reference annotations and do not imply that those annotations are objective or exhaustive.
 
+`report.md` provides a readable summary; CSV and JSON files contain the corresponding detailed results. For the synthetic benchmark, `multilabel_metrics_summary.csv` provides the ranking and `multilabel_metrics_details.json` contains per-label confusion counts.

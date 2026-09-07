@@ -1,6 +1,6 @@
 # Pipeline steps
 
-Commands below are run from the `spillage_release/` directory. Ollama must be available for model-based stages.
+Run the commands below from the repository root. Ollama must be available for model-based stages.
 
 The stages are independent: predictions can be inspected before aggregation, and evaluations can be rerun from saved outputs. Use `--limit-personas` and `--limit-steps` for small checks before a complete run.
 
@@ -90,5 +90,4 @@ python3 steps/agentdam/run.py
 
 AgentDAM produces a binary leakage score rather than separate CE/CI/BE/BI labels. Its comparison with the council is handled by `evaluation/compare_agentdam.py`.
 
-Shared Ollama utilities live in `common/ollama_jury_common.py`.
-
+Shared Ollama utilities live in `steps/common/ollama_jury_common.py`.

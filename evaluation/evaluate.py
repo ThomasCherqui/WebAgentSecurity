@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
-"""Evaluate jury predictions against the SPILLage golden results.
+"""Evaluate saved jury predictions against the SPILLage reference annotations.
 
-The golden labels are built from:
-  jury_step_by_step/0_jury_baseline_Spillage/existing_results
+Reference input (default):
+  data/input/gold/gold.csv
 
-The predictions are read from:
-  jury_step_by_step/jury_baseline_dummy_one_judge/results_ollama
+Prediction input (default):
+  data/output/dummy_judges/**/predictions.csv
+
+Use --pred-root to evaluate another prediction tree. A legacy directory of
+per-person JSON reference annotations can be selected with --reference-root.
 
 Matching is exact on:
   task + normalized persona name + normalized step number
 
-Outputs:
-  - golden/golden_<task>.csv
-  - golden/golden_all.csv
+Outputs under evaluation/results/dummy_judges by default:
   - comparisons/<task>/<model>/matched_rows.csv
   - comparisons/<task>/<model>/unmatched_gold.csv
   - comparisons/<task>/<model>/unmatched_predictions.csv
+  - matched_rows_all.csv
   - metrics_by_label.csv
   - metrics_macro.csv
   - metrics_by_model.csv
@@ -46,7 +48,7 @@ class RowKey:
 
 
 def normalize_task(name: str) -> str:
-    """Normalize task names across golden and prediction folders."""
+    """Normalize task names across reference and prediction sources."""
     name = str(name).strip()
     if name.startswith(GOLD_TASK_PREFIX):
         name = name[len(GOLD_TASK_PREFIX) :]
@@ -175,7 +177,7 @@ def read_golden_csv(path: Path) -> List[Dict[str, Any]]:
             for label in LABELS:
                 row[label] = to_binary(raw.get(label, 0))
             rows.append(row)
-    ensure_unique(rows, f"gold CSV {path}")
+    ensure_unique(rows, f"reference CSV {path}")
     return rows
 
 
@@ -268,7 +270,7 @@ def evaluate_pair(
     gold_rows: Sequence[Mapping[str, Any]],
     pred_rows: Sequence[Mapping[str, Any]],
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]], Dict[str, Any]]:
-    gold_by_key = ensure_unique(gold_rows, f"gold {task}")
+    gold_by_key = ensure_unique(gold_rows, f"reference annotations for {task}")
     pred_by_key = ensure_unique(pred_rows, f"predictions {task}/{model}")
     common_keys = sorted(set(gold_by_key) & set(pred_by_key), key=lambda k: (k.persona, k.step))
 
@@ -340,6 +342,15 @@ def write_csv(path: Path, rows: Sequence[Mapping[str, Any]], fieldnames: Sequenc
 
 def pct(value: Any) -> str:
     return f"{float(value) * 100:5.1f}%"
+
+
+def display_path(path: Path) -> str:
+    """Prefer repository-relative paths in generated reports."""
+    repo_root = Path(__file__).resolve().parent.parent
+    try:
+        return str(path.resolve().relative_to(repo_root))
+    except ValueError:
+        return str(path)
 
 
 def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
@@ -420,17 +431,17 @@ def build_report(
         "",
         "## Matching",
         "",
-        "Golden rows are built from `jury_verdict` in the existing-results JSON files.",
+        "Reference rows are loaded from the configured reference-annotation source.",
         "Prediction rows are read from each `predictions.csv`.",
         "Rows are matched exactly on `(task, persona, step)` after these normalizations:",
         "",
-        "- golden task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;",
+        "- legacy reference task folders drop the `browseruse_` prefix, so `browseruse_shopping_Amazon_chat` matches `shopping_Amazon_chat`;",
         "- persona names are trimmed and internal whitespace is collapsed;",
         "- step labels such as `Step 12` and `12` are both parsed to integer `12`.",
         "",
-        f"Golden root: `{gold_root}`",
-        f"Prediction root: `{pred_root}`",
-        f"Output directory: `{output_dir}`",
+        f"Reference source: `{display_path(gold_root)}`",
+        f"Prediction root: `{display_path(pred_root)}`",
+        f"Output directory: `{display_path(output_dir)}`",
         "",
         "## Model Ranking",
         "",
@@ -490,9 +501,9 @@ def build_report(
                 "task",
                 "model",
                 "matched",
-                "gold",
+                "reference",
                 "pred",
-                "gold_only",
+                "reference_only",
                 "pred_only",
                 "acc",
                 "prec",
@@ -515,11 +526,11 @@ def build_report(
             [
                 row["label"],
                 row["rows_compared"],
-                int(row["support"]),
-                int(row["predicted_positive"]),
-                int(row["tp"]),
-                int(row["fp"]),
-                int(row["fn"]),
+                int(float(row["support"])),
+                int(float(row["predicted_positive"])),
+                int(float(row["tp"])),
+                int(float(row["fp"])),
+                int(float(row["fn"])),
                 pct(row["accuracy"]),
                 pct(row["precision"]),
                 pct(row["recall"]),
@@ -540,23 +551,37 @@ def build_report(
 def parse_args() -> argparse.Namespace:
     repo_eval_dir = Path(__file__).resolve().parent
     framework_root = repo_eval_dir.parent
-    default_gold = framework_root / "data" / "input" / "gold" / "gold.csv"
+    default_reference = framework_root / "data" / "input" / "gold" / "gold.csv"
     default_pred = framework_root / "data" / "output" / "dummy_judges"
-    default_out = repo_eval_dir / "results" / "dummy_judge_eval"
+    default_out = repo_eval_dir / "results" / "dummy_judges"
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gold-root", type=Path, default=default_gold)
-    parser.add_argument("--gold-csv", type=Path, default=default_gold, help="Use this golden CSV instead of --gold-root")
+    reference = parser.add_mutually_exclusive_group()
+    reference.add_argument(
+        "--reference-csv", "--gold-csv", dest="reference_csv", type=Path,
+        help=f"Reference-annotation CSV (default: {default_reference})",
+    )
+    reference.add_argument(
+        "--reference-root", "--gold-root", dest="reference_root", type=Path,
+        help="Legacy directory containing per-person JSON reference annotations",
+    )
     parser.add_argument("--pred-root", type=Path, default=default_pred)
     parser.add_argument("--output-dir", type=Path, default=default_out)
     parser.add_argument("--task", action="append", default=None, help="Task/domain to evaluate; repeat for multiple tasks")
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.reference_csv is None and args.reference_root is None:
+        args.reference_csv = default_reference
+    return args
 
 
 def main() -> None:
     args = parse_args()
-    gold_source = args.gold_csv or args.gold_root
-    gold_rows = read_golden_csv(args.gold_csv) if args.gold_csv else build_golden_rows(args.gold_root)
+    gold_source = args.reference_csv or args.reference_root
+    gold_rows = (
+        read_golden_csv(args.reference_csv)
+        if args.reference_csv
+        else build_golden_rows(args.reference_root)
+    )
     pred_rows = read_prediction_rows(args.pred_root)
 
     if args.task:
@@ -650,7 +675,7 @@ def main() -> None:
             {
                 "matching": {
                     "key": ["task", "persona", "step"],
-                    "task_normalization": "drop leading browseruse_ from golden task directory names",
+                    "task_normalization": "drop leading browseruse_ from legacy reference task directory names",
                     "persona_normalization": "strip and collapse whitespace",
                     "step_normalization": "parse first integer from values like Step 12 or 12",
                 },

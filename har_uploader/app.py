@@ -11,9 +11,8 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 HERE = Path(__file__).resolve().parent
-LIVE_MONITOR_DIR = HERE.parent / "live_privacy_monitor"
-if str(LIVE_MONITOR_DIR) not in sys.path:
-    sys.path.insert(0, str(LIVE_MONITOR_DIR))
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 
 from step_council import run_per_step  # noqa: E402
 from task_conditioner import condition_task  # noqa: E402

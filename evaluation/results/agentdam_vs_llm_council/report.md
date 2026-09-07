@@ -1,6 +1,6 @@
 # LLM Council vs AgentDAM
 
-Gold source: `/home/zhonghao/Documents/Thomas/home/spillage_release/data/input/gold/gold.csv`
+Reference source: `data/input/gold/gold.csv`
 
 AgentDAM contains 1014 predictions. The common intersection of `(task, persona, step)` contains 1014 rows (467 Amazon, 547 eBay).
 
@@ -17,6 +17,6 @@ AgentDAM rows are aligned by ordinal position within each persona trajectory; it
 
 ## Definitions
 
-- `CE_only`: AgentDAM score and LLM Council CE are compared with gold CE.
+- `CE_only`: AgentDAM score and LLM Council CE are compared with the reference CE annotation.
 - `oversharing_any_label`: positive if any of CE, BE, CI, or BI is positive.
 - Rankings use F1, then recall, precision, and accuracy.

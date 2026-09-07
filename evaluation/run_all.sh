@@ -11,12 +11,11 @@ python3 evaluation/compare_agentdam.py
 python3 steps/synthetic/run.py \
   --stage evaluate \
   --dataset data/input/synthetic/spillage_eval_set.jsonl \
-  --output-dir data/output/synthetic2 \
+  --output-dir data/output/synthetic \
   --prompt-template steps/prompt_judges/prompts/comparative_counterexamples_fewshot.md
 
 mkdir -p evaluation/results/synthetic
-cp data/output/synthetic2/comparative_counterexamples_fewshot/metrics/multilabel_metrics_summary.csv evaluation/results/synthetic/
-cp data/output/synthetic2/comparative_counterexamples_fewshot/metrics/multilabel_metrics_details.json evaluation/results/synthetic/
-cp data/output/synthetic2/comparative_counterexamples_fewshot/metrics/agentdam_vs_llm_council.csv evaluation/results/synthetic/
-cp data/output/synthetic2/comparative_counterexamples_fewshot/metrics/agentdam_vs_llm_council.json evaluation/results/synthetic/
-
+cp data/output/synthetic/comparative_counterexamples_fewshot/metrics/multilabel_metrics_summary.csv evaluation/results/synthetic/
+cp data/output/synthetic/comparative_counterexamples_fewshot/metrics/multilabel_metrics_details.json evaluation/results/synthetic/
+cp data/output/synthetic/comparative_counterexamples_fewshot/metrics/agentdam_vs_llm_council.csv evaluation/results/synthetic/
+cp data/output/synthetic/comparative_counterexamples_fewshot/metrics/agentdam_vs_llm_council.json evaluation/results/synthetic/

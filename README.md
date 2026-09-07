@@ -20,13 +20,13 @@ The main experiments compare individual LLM judges, alternative prompting strate
 
 Two evaluation sources are provided:
 
-- recorded Browser-Use and AutoGen trajectories, evaluated against corrected step-level gold annotations;
+- recorded Browser-Use trajectories, evaluated against corrected step-level reference annotations;
 - a synthetic benchmark containing controlled positive, negative, and counterexample cases.
 
 ## Repository structure
 
 ```text
-data/           inputs, gold annotations, saved predictions, and consolidated outputs
+data/           inputs, reference annotations, saved predictions, and consolidated outputs
 steps/          runnable judges, prompt experiments, aggregation, councils, and AgentDAM
 evaluation/     offline evaluation scripts and generated metrics
 har_uploader/   standalone interface for analysing selected HAR-derived browser events
@@ -38,7 +38,7 @@ The main pipeline is:
 tasks + trajectories (or synthetic examples)
     -> individual judges
     -> majority / hybrid aggregation / LLM council
-    -> evaluation against data/input/gold/gold.csv
+    -> evaluation against the reference annotations in data/input/gold/gold.csv
 ```
 
 Inputs and generated outputs are deliberately separated. Saved predictions make it possible to reproduce the reported metrics without repeating model calls.
@@ -66,7 +66,7 @@ Model-based stages use an Ollama-compatible endpoint. Convenience runners and in
 Detailed reports are stored under `evaluation/results/`. The main consolidated files are:
 
 - `data/output/all_steps_results.csv` — saved trajectory and synthetic predictions, excluding AgentDAM;
-- `evaluation/all_step_performance.csv` — gold and predicted labels for every evaluated step;
+- `evaluation/all_step_performance.csv` — reference and predicted labels for every evaluated step;
 - `evaluation/results/synthetic/` — synthetic benchmark metrics;
 - `evaluation/results/agentdam_vs_llm_council/` — the separate binary comparison.
 
@@ -76,4 +76,4 @@ Because implicit labels are comparatively rare, accuracy should not be interpret
 
 Please cite the original SPILLage paper and the associated master thesis when using this repository. Machine-readable citation metadata is provided in [`CITATION.cff`](CITATION.cff).
 
-The repository is distributed under CC BY-NC 4.0; see [`LICENSE`](LICENSE). Guidance on sensitive data, HAR files, gold-annotation limitations, and appropriate use is available in [`ETHICS.md`](ETHICS.md).
+The repository is distributed under CC BY-NC 4.0; see [`LICENSE`](LICENSE). Guidance on sensitive data, HAR files, reference-annotation limitations, and appropriate use is available in [`ETHICS.md`](ETHICS.md).
